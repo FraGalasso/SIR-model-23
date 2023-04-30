@@ -8,15 +8,15 @@ class SIR {
   int R;
 
  public:
-  SIR(int s, int i, int r) : S{s}, I{i}, R{r} {};
+  explicit SIR(int s = 0, int i = 0, int r = 0);
 
-  int Supsceptibles() { return S; };
-  int Infected() { return I; };
-  int Removed() { return R; };
+  int get_s() const;
+  int get_i() const;
+  int get_r() const;
 
-  void set_s(int s) { S = s; }
-  void set_i(int i) { I = i; }
-  void set_r(int r) { R = r; }
+  void set_s(int s);
+  void set_i(int i);
+  void set_r(int r);
 };
 
 #endif
