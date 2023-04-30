@@ -1,18 +1,20 @@
+#include <cassert>
 #include <cmath>
 #include <iostream>
 
 #include "parameters.hpp"
 #include "sir.hpp"
 
-/*void print_SIR(SIR m) {
+void print_SIR(SIR m) {
   std::cout << "Susceptibles: " << m.Supsceptibles()
             << "\nInfected: " << m.Infected() << "\nRemoved: " << m.Removed()
             << '\n';
-}*/
+}
 
 int main() {
-  Parameters p{0.3, 0.1};
+  Parameters p{0.7, 0.1};
   SIR model{50, 6, 0};
+ 
 
   for (int j = 0; j < 15; ++j) {
     const int s = model.Supsceptibles();
@@ -20,10 +22,18 @@ int main() {
     const int r = model.Removed();
     const int N = s + i + r;
 
-    double s1 = round(s - p.beta * s * i / N);
-    double i1 = round(i + p.beta * s * i / N - p.gamma * i);
-    double r1 = round(r + p.gamma * i);
+    int s1 = static_cast<int>(round(s - p.beta * s * i / N));
+    int i1 = static_cast<int>(round(i + p.beta * s * i / N - p.gamma * i));
+    int r1 = static_cast<int>(round(r + p.gamma * i));
     int N1 = s1 + i1 + r1;
+    if (N1 < N) {
+      s1 += N - N1;
+      N1 = N;
+    };
+    if (N1 > N) {
+      s1 -= N1 - N;
+      N1 = N;
+    };
 
     std::cout << s1 << '\t' << i1 << '\t' << r1 << '\t' << N1 << '\n';
 
@@ -31,4 +41,5 @@ int main() {
     model.set_i(i1);
     model.set_r(r1);
   }
+  print_SIR(model);
 }
