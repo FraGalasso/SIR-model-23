@@ -17,6 +17,8 @@ class SIR {
   void set_s(int s);
   void set_i(int i);
   void set_r(int r);
+
+  bool operator==(const SIR& m);
 };
 
 #endif
