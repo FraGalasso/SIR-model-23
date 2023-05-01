@@ -19,26 +19,26 @@ int main() {
   const int N{model.get_s() + model.get_i() + model.get_r()};
 
   for (int j = 0; j < 50000; ++j) {
-    // ottengo i valori di s, i, r in floating point
+    // computing floating-point values for s, i, r
     double s1{model.get_s() - p.beta * model.get_s() * model.get_i() / N};
     double i1{model.get_i() + p.beta * model.get_s() * model.get_i() / N -
               p.gamma * model.get_i()};
     double r1{model.get_r() + p.gamma * model.get_i()};
 
-    // trovo la parte intera
+    // computing integer part
     int s{static_cast<int>(floor(s1))};
     int i{static_cast<int>(floor(i1))};
     int r{static_cast<int>(floor(r1))};
 
-    // separo la parte decimale
+    // separating decimal part
     s1 -= s;
     i1 -= i;
     r1 -= r;
 
-    // equivalente alla somma dei resti
+    // equivalent to sum of decimal parts
     int diff{N - (s + i + r)};
 
-    // uno alla volta, assegno quello che rimane ai vari s, i, r
+    // distributing remainder from decimal parts, one step at a time
     while (diff > 0) {
       if (s1 >= i1 && s1 >= r1) {
         ++s;
@@ -54,11 +54,7 @@ int main() {
         --diff;
       }
     }
-    // a questo punto i dovrebbe essere uguale a = 0
-    if ((s + i + r) != N) {
-      throw std::runtime_error(
-          "Something went wrong with rounding operations.\n");
-    }
+    // at this point diff should be equal to 0
 
     previous.set_s(model.get_s());
     previous.set_i(model.get_i());
@@ -68,8 +64,7 @@ int main() {
     model.set_i(i);
     model.set_r(r);
 
-    // se parto sempre dagli stessi valori interi otterrò sempre gli stessi
-    // risultati
+    // no point in going on if I'm always starting from the same integers
     if (model == previous) {
       std::cout << "Converged after " << j << " steps.\nBreaking loop.\n";
       break;
