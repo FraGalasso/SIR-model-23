@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <vector>
 
 #include "parameters.hpp"
@@ -14,18 +15,15 @@ int main() {
   double beta{};
   double gamma{};
   // std::cin >> beta >> gamma;
-  while (!(std::cin >> beta >> gamma)) {
+  while (!(std::cin >> beta >> gamma) || beta < 0 || beta > 1 || gamma < 0 ||
+         gamma > 1) {
+    if (std::cin.eof()) {
+      return EXIT_FAILURE;
+    }
     std::cin.clear();
-    std::cin.ignore(1000, '\n');
-    std::cerr << "Invalid input.\n";
-  }
-  while (beta < 0 || beta > 1) {
-    std::cout << "Beta must be between 0 and 1. Please retry\n";
-    std::cin >> beta >> gamma;
-  }
-  while (gamma < 0 || gamma > 1) {
-    std::cout << "Gamma must be between 0 and 1. Please retry\n";
-    std::cin >> beta >> gamma;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cerr << "Invalid input. Remember that beta and gamma must be between "
+                 "0 and 1.\n";
   }
   Parameters p{beta, gamma};
   SIR model{100000, 20};
