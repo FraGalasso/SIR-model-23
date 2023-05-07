@@ -1,6 +1,4 @@
-#include <cmath>
 #include <iostream>
-#include <stdexcept>
 #include <vector>
 
 #include "parameters.hpp"
@@ -26,9 +24,9 @@ int main() {
     double r1{model.get_r() + p.gamma * model.get_i()};
 
     // computing integer part
-    int s{static_cast<int>(floor(s1))};
-    int i{static_cast<int>(floor(i1))};
-    int r{static_cast<int>(floor(r1))};
+    int s{static_cast<int>(s1)};
+    int i{static_cast<int>(i1)};
+    int r{static_cast<int>(r1)};
 
     // separating decimal part
     s1 -= s;
