@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <stdexcept>
 #include <vector>
 
 #include "parameters.hpp"
@@ -10,23 +11,45 @@ void print_SIR(SIR m) {
             << "\nRemoved: " << m.get_r() << '\n';
 }
 
-int main() {
-  std::cout << "Input beta and gamma.\n";
-  double beta{};
-  double gamma{};
-  // std::cin >> beta >> gamma;
-  while (!(std::cin >> beta >> gamma) || beta < 0 || beta > 1 || gamma < 0 ||
-         gamma > 1) {
+double insert_parameter() {
+  double par;
+  while (!(std::cin >> par) || par < 0 || par > 1) {
     if (std::cin.eof()) {
-      return EXIT_FAILURE;
+      throw std::runtime_error{"Unexpected input termination."};
     }
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cerr << "Invalid input. Remember that beta and gamma must be between "
-                 "0 and 1.\n";
+    std::cerr << "Invalid input. Remember that it must be between 0 and 1.\n";
   }
+  return par;
+}
+
+int insert_people() {
+  int people;
+  while (!(std::cin >> people) || people < 0) {
+    if (std::cin.eof()) {
+      throw std::runtime_error{"Unexpected input termination."};
+    }
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cerr << "Invalid input. Remember that it must be at least 0.\n";
+  }
+  return people;
+}
+
+int main() {
+  std::cout << "Input beta.\n";
+  double beta{insert_parameter()};
+  std::cout << "Input gamma.\n";
+  double gamma{insert_parameter()};
   Parameters p{beta, gamma};
-  SIR model{100000, 20};
+  SIR model{};
+  std::cout << "Input susceptibles.\n";
+  model.set_s(insert_people());
+  std::cout << "Input infectious.\n";
+  model.set_i(insert_people());
+  std::cout << "Input removed.\n";
+  model.set_r(insert_people());
   SIR previous{};
 
   const int N{model.get_s() + model.get_i() + model.get_r()};
