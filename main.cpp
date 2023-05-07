@@ -1,3 +1,5 @@
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -107,4 +109,15 @@ int main() {
     }
   }
   print_SIR(model);
+
+  std::ofstream out_file("results.txt");
+  if (!out_file) {
+    std::cerr << "Failed opening results.txt.\n";
+    return EXIT_FAILURE;
+  }
+  out_file << std::setw(15) << "Susceptibles:" << std::setw(15)
+           << "Infectious:" << std::setw(15) << "Removed:" << '\n'
+           << std::setw(15) << model.get_s() << std::setw(15) << model.get_i()
+           << std::setw(15) << model.get_r() << '\n';
+  out_file.close();
 }
