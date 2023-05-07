@@ -10,7 +10,24 @@ void print_SIR(SIR m) {
 }
 
 int main() {
-  Parameters p{0.3, 0.015};
+  std::cout << "Input beta and gamma.\n";
+  double beta{};
+  double gamma{};
+  // std::cin >> beta >> gamma;
+  while (!(std::cin >> beta >> gamma)) {
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+    std::cerr << "Invalid input.\n";
+  }
+  while (beta < 0 || beta > 1) {
+    std::cout << "Beta must be between 0 and 1. Please retry\n";
+    std::cin >> beta >> gamma;
+  }
+  while (gamma < 0 || gamma > 1) {
+    std::cout << "Gamma must be between 0 and 1. Please retry\n";
+    std::cin >> beta >> gamma;
+  }
+  Parameters p{beta, gamma};
   SIR model{100000, 20};
   SIR previous{};
 
