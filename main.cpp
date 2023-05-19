@@ -8,7 +8,7 @@
 #include "parameters.hpp"
 #include "sir.hpp"
 
-void print_SIR(SIR m) {
+void print_SIR(SIR const& m) {
   std::cout << "Susceptibles: " << m.get_s() << "\nInfectious: " << m.get_i()
             << "\nRemoved: " << m.get_r() << '\n';
 }
@@ -53,11 +53,16 @@ int main() {
     model.set_i(insert_people());
     std::cout << "Input removed.\n";
     model.set_r(insert_people());
+    std::cout << "Input duration (in days).\n";
+    int steps{insert_people()};
     SIR previous{};
 
     const int N{model.get_s() + model.get_i() + model.get_r()};
+    if (N == 0) {
+      steps = 0;
+    }
 
-    for (int j = 0; j < 50000; ++j) {
+    for (int j = 0; j < steps; ++j) {
       // computing floating-point values for s, i, r
       double s1{model.get_s() - p.beta * model.get_s() * model.get_i() / N};
       double i1{model.get_i() + p.beta * model.get_s() * model.get_i() / N -
