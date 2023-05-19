@@ -4,6 +4,11 @@
 
 #include "doctest.h"
 
+TEST_CASE("Testing correct construction") {
+  SIR m(60, 5, 0);
+  CHECK_THROWS_AS(SIR m(60, -5, 0), std::runtime_error);
+}
+
 TEST_CASE("Testing getters and setters") {
   SIR m(60, 5, 0);
   CHECK(m.get_s() == 60);
