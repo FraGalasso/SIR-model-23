@@ -31,7 +31,7 @@ class Popolazione {
   int size() { return v.size(); }
 
   void evolve() {
-    for (int i = 0; i < v.size(); ++i) {
+    for (int i = 0; i < size(); ++i) {
       int r = v[i].GetX();
       int px = v[i].GetPx();
       int py = v[i].GetPy();
@@ -53,16 +53,17 @@ class Popolazione {
         if (r >= 0 && r <= 9) {
           r += 90;
         } else {
-          ++r;
+          r -= 10;
         }
       }
       if (py == -1) {
         if (r >= 90 && r <= 99) {
           r -= 90;
         } else {
-          --r;
+          r += 10;
         }
-      } else {
+      }
+      if ((px * px) != 1 && (py * py) != 1) {
         r = 0;
       }
       v[i].SetX(r);
