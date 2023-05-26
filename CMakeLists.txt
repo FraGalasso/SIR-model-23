@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(sir VERSION 0.1.0)
+project(sir VERSION 1.1.0)
 
 # abilita il supporto per i test, tra cui l'opzione BUILD_TESTING usata sotto
 include(CTest)
