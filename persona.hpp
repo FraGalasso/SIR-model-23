@@ -1,6 +1,7 @@
 #ifndef PERSONA_HPP
 #define PERSONA_HPP
 
+#include <random>
 #include <vector>
 
 enum class Stato { Susceptible, Infectious, Removed };
@@ -17,6 +18,8 @@ class Persona {
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   void SetX(int y) { x = y; };
+  void SetPx(int p) { px = p; }
+  void SetPy(int p) { py = p; }
 };
 
 class Popolazione {
@@ -69,6 +72,21 @@ class Popolazione {
       v[i].SetX(r);
     }
   }
+  void random_distribution() {
+    std::mt19937 gen(time(0));
+    // random bit generator (mersenne twister)
+    for (int i = 0; i < size(); ++i) {
+      std::uniform_int_distribution<> x_distribution(0, 99);
+      int x = x_distribution(gen);
+      std::uniform_int_distribution<> px_distribution(-1, 1);
+      int px = px_distribution(gen);
+      std::uniform_int_distribution<> py_distribution(-1, 1);
+      int py = py_distribution(gen);
+      v[i].SetX(x);
+      v[i].SetPx(px);
+      v[i].SetPy(py);
+    }
+  };
 };
 
 #endif
