@@ -30,5 +30,8 @@ if (BUILD_TESTING)
   # aggiungi l'eseguibile sir.t alla lista dei test
   add_test(NAME sir.t COMMAND sir.t)
 
+  add_executable(evolve.t evolve.test.cpp sir.cpp)
+  add_test(NAME evolve.t COMMAND evolve.t)
+
 endif()
 

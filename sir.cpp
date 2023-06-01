@@ -17,8 +17,8 @@ void SIR::set_i(int i) { I = i; }
 void SIR::set_r(int r) { R = r; }
 
 bool SIR::operator==(const SIR& m) {
-  if (S != m.get_s() || I != m.get_i() || R != m.get_r()) {
-    return false;
+  if (S == m.get_s() && I == m.get_i() && R == m.get_r()) {
+    return true;
   }
-  return true;
+  return false;
 }
