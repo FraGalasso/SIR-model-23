@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 
-enum class Stato { Susceptible, Infectious, Removed };
+enum class Stato { s, i, r };
 
 class Persona {
  private:
@@ -18,9 +18,11 @@ class Persona {
   int GetX() const { return x; }
   int GetPx() const { return px; }
   int GetPy() const { return py; }
+  Stato GetStatus() const { return s; }
   void SetX(int y) { x = y; };
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
+  void SetStatus(Stato z) { s = z; }
 };
 
 class Popolazione {
@@ -85,6 +87,8 @@ class Popolazione {
       }
       v[i].SetX(r);
     };
+    infection();
+    collision();
   };
   void random_distribution() {
     std::mt19937 gen(time(0));
@@ -103,11 +107,11 @@ class Popolazione {
   }
 
   void collision() {
-    for(int i = 0; i< size(); ++i){
-    int j= 1;
-      while (j+i < size()) {
-          v[i] = GetPerson(i);
-        v[i+j] = GetPerson(i + j);
+    for (int i = 0; i < size(); ++i) {
+      int j = 1;
+      while (j + i < size()) {
+        v[i] = GetPerson(i);
+        v[i + j] = GetPerson(i + j);
         int r = v[i].GetX();
         int px = v[i].GetPx();
         int py = v[i].GetPy();
@@ -119,23 +123,39 @@ class Popolazione {
           px_ = -px_;
           py = -py;
           py_ = -py;
-         v[i].SetPx(px);
-        v[i].SetPy(py);
-        v[i + j].SetPx(px_);
-        v[i + j].SetPy(py_);
+          v[i].SetPx(px);
+          v[i].SetPy(py);
+          v[i + j].SetPx(px_);
+          v[i + j].SetPy(py_);
         }
-       ++j;
+        ++j;
       }
-  }
+    }
   };
-  /* void infection(){
-     for (int i=0; i< size() ; ++i){
-     v[i] = GetPerson(i);
-     int r = v[i].GetX();
-     v[i];
-
-     }
-   } */
+  void infection() {
+    for (int i = 0; i < size(); ++i) {
+      int j = 1;
+      while (j + i < size()) {
+        v[i] = GetPerson(i);
+        v[i + j] = GetPerson(i + j);
+        int r = v[i].GetX();
+        int r_ = v[i + j].GetX();
+        Stato st1 = v[i].GetStatus();
+        Stato st2 = v[i + j].GetStatus();
+        if (r == r_) {
+          if (st1 == Stato::i && st2 == Stato::s) {
+            st2 = Stato::i;
+            v[i + j].SetStatus(st2);
+          }
+          if (st1 == Stato::s && st2 == Stato::i) {
+            st1 = Stato::i;
+            v[i].SetStatus(st1);
+          }
+        }
+        ++j;
+      }
+    }
+  };
 };
 
 #endif
