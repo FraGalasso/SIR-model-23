@@ -1,114 +1,51 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "doctest.h"
-#include "parameters.hpp"
-#include "sir.hpp"
+#include "persona.hpp"
 
-// returns steps needed to get to result
-int evolve(Parameters const& p, SIR& model, int const& steps) {
-  SIR previous{};
+TEST_CASE("Testing Evolution with one element") {
+  Stato S{};
+  Persona p(0, 1, 0, S);
+  std::vector<Persona> V;
+  V.push_back(p);
+  Popolazione pop{V};
+  pop.evolve();
+  Persona p1 = pop.GetPerson(0);
+  CHECK(p1.GetX() == 1);
+  CHECK(p.GetX() == 0);
+};
 
-  const int N{model.get_s() + model.get_i() + model.get_r()};
+TEST_CASE("Testing Evolution with three elements") {
+  Stato S{};
+  Persona p(29, 0, 1, S);
+  Persona q(99, 1, -1, S);
+  Persona b(98, 1, 1, S);
+  std::vector<Persona> V;
+  V = {p, q, b};
+  Popolazione pop{V};
+  pop.evolve();
+  Persona p1 = pop.GetPerson(0);
+  Persona q1 = pop.GetPerson(1);
+  Persona b1 = pop.GetPerson(2);
+  CHECK(p1.GetX() == 19);
+  CHECK(q1.GetX() == 0);
+  CHECK(b1.GetX() == 89);
+};
 
-  if (N==0) {
-    return 1;
-  }
-
-  for (int j = 0; j < steps; ++j) {
-    // computing floating-point values for s, i, r
-    double s1{model.get_s() - p.beta * model.get_s() * model.get_i() / N};
-    double i1{model.get_i() + p.beta * model.get_s() * model.get_i() / N -
-              p.gamma * model.get_i()};
-    double r1{model.get_r() + p.gamma * model.get_i()};
-
-    // computing integer part
-    int s{static_cast<int>(s1)};
-    int i{static_cast<int>(i1)};
-    int r{static_cast<int>(r1)};
-
-    // separating decimal part
-    s1 -= s;
-    i1 -= i;
-    r1 -= r;
-
-    // equivalent to sum of decimal parts
-    int diff{N - (s + i + r)};
-
-    // distributing remainder from decimal parts, one step at a time
-    while (diff > 0) {
-      if (s1 >= i1 && s1 >= r1) {
-        ++s;
-        s1 = 0;
-        --diff;
-      } else if (i1 >= s1 && i1 >= r1) {
-        ++i;
-        i1 = 0;
-        --diff;
-      } else {
-        ++r;
-        r1 = 0;
-        --diff;
-      }
-    }
-    // at this point diff should be equal to 0
-
-    previous.set_s(model.get_s());
-    previous.set_i(model.get_i());
-    previous.set_r(model.get_r());
-
-    model.set_s(s);
-    model.set_i(i);
-    model.set_r(r);
-
-    // no point in going on if I'm always starting from the same integers
-    if (model == previous) {
-      return j + 1;
-    }
-  }
-  return steps;
-}
-
-TEST_CASE("Testing no evolution") {
-  SIR m(60, 5, 0);
-  Parameters p{0.3, 0.7};
-  CHECK(evolve(p, m, 0) == 0);
-  CHECK(m.get_s() == 60);
-  CHECK(m.get_i() == 5);
-  CHECK(m.get_r() == 0);
-}
-
-TEST_CASE("Testing little evolution") {
-  SIR m(60, 5, 0);
-  Parameters p{0.3, 0.7};
-  CHECK(evolve(p, m, 3) == 3);
-  CHECK(m.get_s() == 58);
-  CHECK(m.get_i() == 1);
-  CHECK(m.get_r() == 6);
-}
-
-TEST_CASE("Testing early exit") {
-  SIR m(60, 5, 0);
-  Parameters p{0.3, 0.7};
-  CHECK(evolve(p, m, 10) == 5);
-  CHECK(m.get_s() == 58);
-  CHECK(m.get_i() == 0);
-  CHECK(m.get_r() == 7);
-}
-
-TEST_CASE("Testing no infection") {
-  SIR m(60, 5, 0);
-  Parameters p{0, 0};
-  CHECK(evolve(p, m, 10) == 1);
-  CHECK(m.get_s() == 60);
-  CHECK(m.get_i() == 5);
-  CHECK(m.get_r() == 0);
-}
-
-TEST_CASE("Testing no people") {
-  SIR m(0, 0, 0);
-  Parameters p{0.3, 0.7};
-  CHECK(evolve(p, m, 10) == 1);
-  CHECK(m.get_s() == 0);
-  CHECK(m.get_i() == 0);
-  CHECK(m.get_r() == 0);
-}
+ TEST_CASE("Testing Evolution twice") {
+  Stato S{};
+  Persona p(29, 0, 1, S);
+  Persona q(99, 1, -1, S);
+  Persona b(98, 1, 1, S);
+  std::vector<Persona> V;
+  V = {p, q, b};
+  Popolazione pop{V};
+  pop.evolve();
+  pop.evolve();
+  Persona p1 = pop.GetPerson(0);
+  Persona q1 = pop.GetPerson(1);
+  Persona b1 = pop.GetPerson(2);
+  CHECK(p1.GetX() == 9);
+  CHECK(q1.GetX() == 11);
+  CHECK(b1.GetX() == 70);
+};
