@@ -100,26 +100,21 @@ void Popolazione::collision() {
 }
 
 void Popolazione::infection() {
-  for (int i = 0; i < size(); ++i) {
-    int j = 1;
-    while (j + i < size()) {
-      v[i] = GetPerson(i);
-      v[i + j] = GetPerson(i + j);
-      int r = v[i].GetX();
-      int r_ = v[i + j].GetX();
-      Stato st1 = v[i].GetStatus();
-      Stato st2 = v[i + j].GetStatus();
-      if (r == r_) {
+  for (int i = 0; i < size() - 1; ++i) {
+    for (int j = i + 1; j < size(); ++j) {
+      if (v[i].GetX() == v[j].GetX()) {
+        Stato st1 = v[i].GetStatus();
+        Stato st2 = v[j].GetStatus();
         if (st1 == Stato::i && st2 == Stato::s) {
           st2 = Stato::i;
-          v[i + j].SetStatus(st2);
+          v[j].SetStatus(st2);
+          continue;
         }
         if (st1 == Stato::s && st2 == Stato::i) {
           st1 = Stato::i;
           v[i].SetStatus(st1);
         }
       }
-      ++j;
     }
   }
-};
+}
