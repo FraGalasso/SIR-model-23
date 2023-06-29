@@ -1,8 +1,6 @@
 #ifndef PERSONA_HPP
 #define PERSONA_HPP
 
-#include <iostream>
-#include <random>
 #include <vector>
 
 enum class Stato { s, i, r };

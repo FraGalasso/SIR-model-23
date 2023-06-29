@@ -1,9 +1,9 @@
 #include "persona.hpp"
 
+#include <random>
+
 void Popolazione::evolve() {
   for (int i = 0; i < size(); ++i) {
-    v[i] = GetPerson(i);
-    
     if (v[i].GetStatus() == Stato::r) {
       continue;
     }
@@ -87,11 +87,22 @@ void Popolazione::status_distribution(int n) {
 }
 
 void Popolazione::collision() {
+  for (int i = 0; i < size() - 1; ++i) {
+    for (int j = i + 1; j < size(); ++j) {
+      if (v[i].GetX() == v[j].GetX()) {
+        v[i].SetPx(-(v[i].GetPx()));
+        v[i].SetPy(-(v[i].GetPy()));
+        v[j].SetPx(-(v[j].GetPx()));
+        v[j].SetPy(-(v[j].GetPy()));
+      }
+    }
+  }
+}
+
+/*void Popolazione::collision() {
   for (int i = 0; i < size(); ++i) {
     int j = 1;
     while (j + i < size()) {
-      v[i] = GetPerson(i);
-      v[i + j] = GetPerson(i + j);
       int r = v[i].GetX();
       int px = v[i].GetPx();
       int py = v[i].GetPy();
@@ -111,7 +122,7 @@ void Popolazione::collision() {
       ++j;
     }
   }
-}
+}*/
 
 void Popolazione::infection() {
   for (int i = 0; i < size(); ++i) {
