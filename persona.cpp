@@ -99,31 +99,6 @@ void Popolazione::collision() {
   }
 }
 
-/*void Popolazione::collision() {
-  for (int i = 0; i < size(); ++i) {
-    int j = 1;
-    while (j + i < size()) {
-      int r = v[i].GetX();
-      int px = v[i].GetPx();
-      int py = v[i].GetPy();
-      int r_ = v[i + j].GetX();
-      int px_ = v[i + j].GetPx();
-      int py_ = v[i + j].GetPy();
-      if (r == r_) {
-        px = -px;
-        px_ = -px_;
-        py = -py;
-        py_ = -py;
-        v[i].SetPx(px);
-        v[i].SetPy(py);
-        v[i + j].SetPx(px_);
-        v[i + j].SetPy(py_);
-      }
-      ++j;
-    }
-  }
-}*/
-
 void Popolazione::infection() {
   for (int i = 0; i < size(); ++i) {
     int j = 1;
