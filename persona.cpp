@@ -3,59 +3,60 @@
 void Popolazione::evolve() {
   for (int i = 0; i < size(); ++i) {
     v[i] = GetPerson(i);
+    
+    if (v[i].GetStatus() == Stato::r) {
+      continue;
+    }
+
     int r = v[i].GetX();
     int px = v[i].GetPx();
     int py = v[i].GetPy();
 
-    if (v[i].GetStatus() != Stato::r) {
-      if (px == 1) {
-        if ((r % 10) == 9) {
-          // dx = -9;
-          r -= 9;
-        } else {
-          // dx = 1;
-          ++r;
-        }
+    if (px == 1) {
+      if ((r % 10) == 9) {
+        // dx = -9;
+        r -= 9;
+      } else {
+        // dx = 1;
+        ++r;
       }
-      if (px == -1) {
-        if (r % 10 == 0) {
-          // dx = 9;
-          r += 9;
-        } else {
-          --r;
-        }
-      }
-      if (py == 1) {
-        if (r >= 0 && r <= 9) {
-          // dy = 90;
-          r += 90;
-        } else {
-          // dy = -10;
-          r -= 10;
-        }
-      }
-      if (py == -1) {
-        if (r >= 90 && r <= 99) {
-          // dy = -90;
-          r -= 90;
-        } else {
-          // dy = 10;
-          r += 10;
-        }
-      }
-      if ((px * px) != 1 && (py * py) != 1) {
-        // dx = 0;
-        // dy = 0;
-        r = 0;
-      }
-      v[i].SetX(r);
     }
-    if (v[i].GetStatus() == Stato::r) {
-      v[i].SetX(100);
+    if (px == -1) {
+      if (r % 10 == 0) {
+        // dx = 9;
+        r += 9;
+      } else {
+        --r;
+      }
     }
-    infection();
-    collision();
+    if (py == 1) {
+      if (r >= 0 && r <= 9) {
+        // dy = 90;
+        r += 90;
+      } else {
+        // dy = -10;
+        r -= 10;
+      }
+    }
+    if (py == -1) {
+      if (r >= 90 && r <= 99) {
+        // dy = -90;
+        r -= 90;
+      } else {
+        // dy = 10;
+        r += 10;
+      }
+    }
+    if ((px * px) != 1 && (py * py) != 1) {
+      // dx = 0;
+      // dy = 0;
+      r = 0;
+    }
+    v[i].SetX(r);
   }
+
+  infection();
+  collision();
 }
 
 void Popolazione::random_distribution() {
