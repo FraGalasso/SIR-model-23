@@ -175,4 +175,4 @@ class Popolazione {
 
 // fare in modo che ci sia una probabilità di contagio
 
-// visualizzazione con un grafico 10x10
+// visualizzazione con una griglia 10x10
