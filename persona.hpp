@@ -43,52 +43,55 @@ class Popolazione {
       int px = v[i].GetPx();
       int py = v[i].GetPy();
 
-      // int dx;
-      // int dy;
-      if (px == 1) {
-        if ((r % 10) == 9) {
-          // dx = -9;
-          r -= 9;
-        } else {
-          // dx = 1;
-          ++r;
+      if (v[i].GetStatus() != Stato::r) {
+        if (px == 1) {
+          if ((r % 10) == 9) {
+            // dx = -9;
+            r -= 9;
+          } else {
+            // dx = 1;
+            ++r;
+          }
         }
-      }
-      if (px == -1) {
-        if (r % 10 == 0) {
-          // dx = 9;
-          r += 9;
-        } else {
-          --r;
+        if (px == -1) {
+          if (r % 10 == 0) {
+            // dx = 9;
+            r += 9;
+          } else {
+            --r;
+          }
         }
-      }
-      if (py == 1) {
-        if (r >= 0 && r <= 9) {
-          // dy = 90;
-          r += 90;
-        } else {
-          // dy = -10;
-          r -= 10;
+        if (py == 1) {
+          if (r >= 0 && r <= 9) {
+            // dy = 90;
+            r += 90;
+          } else {
+            // dy = -10;
+            r -= 10;
+          }
         }
-      }
-      if (py == -1) {
-        if (r >= 90 && r <= 99) {
-          // dy = -90;
-          r -= 90;
-        } else {
-          // dy = 10;
-          r += 10;
+        if (py == -1) {
+          if (r >= 90 && r <= 99) {
+            // dy = -90;
+            r -= 90;
+          } else {
+            // dy = 10;
+            r += 10;
+          }
         }
+        if ((px * px) != 1 && (py * py) != 1) {
+          // dx = 0;
+          // dy = 0;
+          r = 0;
+        }
+        v[i].SetX(r);
       }
-      if ((px * px) != 1 && (py * py) != 1) {
-        // dx = 0;
-        // dy = 0;
-        r = 0;
+      if (v[i].GetStatus() == Stato::r) {
+        v[i].SetX(100);
       }
-      v[i].SetX(r);
-    };
-    infection();
-    collision();
+      infection();
+      collision();
+    }
   };
   void random_distribution() {
     std::mt19937 gen(time(0));
@@ -103,6 +106,16 @@ class Popolazione {
       v[i].SetX(x);
       v[i].SetPx(px);
       v[i].SetPy(py);
+    }
+  }
+  void status_distribution(int n) {
+    std::mt19937 gen(time(0));
+    // random bit generator (mersenne twister)
+    for (int i = 0; i < n; ++i) {
+      v[i].SetStatus(Stato::i);
+    }
+    for (int i = n; i < size(); ++i) {
+      v[i].SetStatus(Stato::s);
     }
   }
 
@@ -159,3 +172,7 @@ class Popolazione {
 };
 
 #endif
+
+// fare in modo che ci sia una probabilità di contagio
+
+// visualizzazione con un grafico 10x10
