@@ -3,9 +3,9 @@
 #include "persona.hpp"
 
 TEST_CASE("Testing collisions") {
-  Persona p(1, -1, 0, Stato::s, 0);
-  Persona q(9, 1, 0, Stato::s, 0);
-  Persona d(27, -1, 1, Stato::s, 0);
+  Persona p(1, -1, 0, Stato::s);
+  Persona q(9, 1, 0, Stato::s);
+  Persona d(27, -1, 1, Stato::s);
   Popolazione pop{{p, d, q}};
   pop.evolve();
   pop.evolve();
@@ -26,9 +26,9 @@ TEST_CASE("Testing collisions") {
 
 // horrible fail
 TEST_CASE("Testing triple collisions") {
-  Persona a(1, -1, 0, Stato::s, 0);
-  Persona b(9, 1, 0, Stato::s, 0);
-  Persona c(11, -1, 1, Stato::s, 0);
+  Persona a(1, -1, 0, Stato::s);
+  Persona b(9, 1, 0, Stato::s);
+  Persona c(11, -1, 1, Stato::s);
   Popolazione pop{{a, b, c}};
   pop.evolve();
 
@@ -53,10 +53,10 @@ TEST_CASE("Testing triple collisions") {
 };
 
 TEST_CASE("Testing quadruple collisions") {
-  Persona a(1, -1, 0, Stato::s, 0);
-  Persona b(9, 1, 0, Stato::s, 0);
-  Persona c(11, -1, 1, Stato::s, 0);
-  Persona d(90, 0, -1, Stato::s, 0);
+  Persona a(1, -1, 0, Stato::s);
+  Persona b(9, 1, 0, Stato::s);
+  Persona c(11, -1, 1, Stato::s);
+  Persona d(90, 0, -1, Stato::s);
   Popolazione pop{{a, b, c, d}};
   pop.evolve();
 

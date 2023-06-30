@@ -10,20 +10,20 @@ class Persona {
   int x;
   int px, py;
   Stato s;
-  int e;
+  bool e = true;
 
  public:
-  Persona(int X, int Px, int Py, Stato S, int E) : x{X}, px{Px}, py{Py}, s{S} , e{E} {};
+  Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {};
   int GetX() const { return x; }
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   Stato GetStatus() const { return s; }
-  int GetCollision() const {return e; }
+  bool GetCollision() const {return e; }
   void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
   void SetStatus(Stato z) { s = z; }
-  void SetCollision(int c) {e = c;}
+  void SetCollision(bool c) {e = c;}
 };
 
 class Popolazione {

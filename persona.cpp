@@ -90,22 +90,21 @@ void Popolazione::collision() {
   for (int i = 0; i < size() - 1; ++i) {
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
-        if (v[i].GetCollision() == 0) {
+        if (v[i].GetCollision()) {
           v[i].SetPx(-(v[i].GetPx()));
           v[i].SetPy(-(v[i].GetPy()));
-          v[i].SetCollision(1);
+          v[i].SetCollision(false);
         }
-        if (v[j].GetCollision() == 0) {
+        if (v[j].GetCollision()) {
           v[j].SetPx(-(v[j].GetPx()));
           v[j].SetPy(-(v[j].GetPy()));
-          v[j].SetCollision(1);
+          v[j].SetCollision(false);
         }
       }
     }
   }
-
   for (int i = 0; i < size(); ++i) {
-    v[i].SetCollision(0);
+    v[i].SetCollision(true);
   }
 }
 
