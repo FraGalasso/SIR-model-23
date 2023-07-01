@@ -1,92 +1,73 @@
 #ifndef PERSONA_HPP
 #define PERSONA_HPP
 
-#include <random>
+#include <stdexcept>
 #include <vector>
 
-enum class Stato { Susceptible, Infectious, Removed };
+enum class Stato { s, i, r };
 
 class Persona {
  private:
   int x;
   int px, py;
   Stato s;
+  bool e = true;
 
  public:
   Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {};
   int GetX() const { return x; }
   int GetPx() const { return px; }
   int GetPy() const { return py; }
-  void SetX(int y) { x = y; };
+  Stato GetStatus() const { return s; }
+  bool GetCollision() const { return e; }
+  void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
+  void SetStatus(Stato z) { s = z; }
+  void SetCollision(bool c) { e = c; }
 };
 
 class Popolazione {
  private:
   std::vector<Persona> v;
+  const double beta;
+  const double gamma;
 
  public:
-  Popolazione(std::vector<Persona> V) : v{V} {};
+  Popolazione(std::vector<Persona> V, double b, double g)
+      : v{V}, beta{b}, gamma{g} {
+    if (b < 0 || b > 1) {
+      throw std::runtime_error{"Not a valid beta."};
+    }
+    if (g < 0 || g > 1) {
+      throw std::runtime_error{"Not a valid gamma."};
+    }
+  };
+
+  // useful for collision tests
+  Popolazione(std::vector<Persona> V) : v{V}, beta{0}, gamma{0} {};
 
   Persona GetPerson(int i) const { return v[i]; }
 
+  double GetBeta() const { return beta; }
+
+  double GetGamma() const { return gamma; }
+
   int size() { return v.size(); }
 
-  void evolve() {
-    for (int i = 0; i < size(); ++i) {
-      int r = v[i].GetX();
-      int px = v[i].GetPx();
-      int py = v[i].GetPy();
-      if (px == 1) {
-        if ((r % 10) == 9) {
-          r -= 9;
-        } else {
-          ++r;
-        }
-      }
-      if (px == -1) {
-        if (r % 10 == 0) {
-          r += 9;
-        } else {
-          --r;
-        }
-      }
-      if (py == 1) {
-        if (r >= 0 && r <= 9) {
-          r += 90;
-        } else {
-          r -= 10;
-        }
-      }
-      if (py == -1) {
-        if (r >= 90 && r <= 99) {
-          r -= 90;
-        } else {
-          r += 10;
-        }
-      }
-      if ((px * px) != 1 && (py * py) != 1) {
-        r = 0;
-      }
-      v[i].SetX(r);
-    }
-  }
-  void random_distribution() {
-    std::mt19937 gen(time(0));
-    // random bit generator (mersenne twister)
-    for (int i = 0; i < size(); ++i) {
-      std::uniform_int_distribution<> x_distribution(0, 99);
-      int x = x_distribution(gen);
-      std::uniform_int_distribution<> px_distribution(-1, 1);
-      int px = px_distribution(gen);
-      std::uniform_int_distribution<> py_distribution(-1, 1);
-      int py = py_distribution(gen);
-      v[i].SetX(x);
-      v[i].SetPx(px);
-      v[i].SetPy(py);
-    }
-  };
+  void evolve();
+
+  void random_distribution();
+
+  void status_distribution(int n);
+
+  void collision();
+
+  void infection();
 };
 
 #endif
+
+// fare in modo che ci sia una probabilità di contagio
+
+// visualizzazione con una griglia 10x10

@@ -33,8 +33,14 @@ if (BUILD_TESTING)
   add_executable(evolve1.t evolve1.test.cpp sir.cpp)
   add_test(NAME evolve1.t COMMAND evolve1.t)
 
-  add_executable(evolve2.t evolve2.test.cpp sir.cpp)
+  add_executable(evolve2.t evolve2.test.cpp sir.cpp persona.cpp)
   add_test(NAME evolve2.t COMMAND evolve2.t)
+
+  add_executable(collision.t collision.test.cpp persona.cpp)
+  add_test(NAME collision.t COMMAND collision.t)
+
+  add_executable(infection.t infection.test.cpp persona.cpp)
+  add_test(NAME infection.t COMMAND infection.t)
 
 endif()
 
