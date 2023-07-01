@@ -3,7 +3,6 @@
 #include <random>
 
 void Popolazione::evolve(Parameter const& par) {
-  
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::r) {
       continue;
@@ -48,14 +47,9 @@ void Popolazione::evolve(Parameter const& par) {
         r += 10;
       }
     }
-    if ((px * px) != 1 && (py * py) != 1) {
-      // dx = 0;
-      // dy = 0;
-      r = 0;
-    }
     v[i].SetX(r);
   }
- 
+
   infection(par);
   collision();
 }
@@ -110,39 +104,33 @@ void Popolazione::collision() {
 }
 
 void Popolazione::infection(Parameter const& par) {
-  for (int i = 0; i < size() - 1; ++i) {
+  std::random_device r;
+  std::default_random_engine eng(r());
+  std::uniform_real_distribution<> prob(0, 1);
+  for (int i = 0; i < size(); ++i) {
+    if (v[i].GetStatus() == Stato::i && prob(eng) < par.g) {
+      v[i].SetStatus(Stato::r);
+      v[i].SetX(100);
+    }
+  }
+  for (int i = 0; i < size(); ++i) {
+    Stato st1 = v[i].GetStatus();
+    if (st1 == Stato::r) {
+      continue;
+    }
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
-        Stato st1 = v[i].GetStatus();
         Stato st2 = v[j].GetStatus();
-        if (st1 == Stato::i && st2 == Stato::s) {
-          std::mt19937 gen(time(0));
-          std::uniform_int_distribution<> prob(0, 100);
-          int p = prob(gen);
-
-          if ((par.b * 100) >= p) {
-            st2 = Stato::i;
-            v[j].SetStatus(st2);
-            continue;
-          }
+        if ((st1 == st2) || (st2 == Stato::r) || (prob(eng) > par.b)) {
+          continue;
         }
-        if (st1 == Stato::s && st2 == Stato::i) {
-          std::mt19937 gen(time(0));
-          std::uniform_int_distribution<> prob(0, 100);
-          int p = prob(gen);
-          if ((par.b * 100) >= p) {
-            st1 = Stato::i;
-            v[i].SetStatus(st1);
-          }
+        if (st1 == Stato::i) {
+          v[j].SetStatus(Stato::i);
+          continue;
         }
-      }
-    }
-    if (v[i].GetStatus() == Stato::i) {
-      std::mt19937 gen(time(0));
-      std::uniform_int_distribution<> prob(0, 100);
-      int p = prob(gen);
-      if ((par.g * 100) >= p) {
-        v[i].SetStatus(Stato::r);
+        if (st1 == Stato::s) {
+          v[i].SetStatus(Stato::i);
+        }
       }
     }
   }
