@@ -2,11 +2,8 @@
 
 #include <random>
 
-Parameter par;
-double b = par.beta();
-double g = par.gamma();
-
-void Popolazione::evolve() {
+void Popolazione::evolve(Parameter const& par) {
+  
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::r) {
       continue;
@@ -58,8 +55,8 @@ void Popolazione::evolve() {
     }
     v[i].SetX(r);
   }
-
-  infection(par.beta(), par.gamma());
+ 
+  infection(par);
   collision();
 }
 
@@ -112,7 +109,7 @@ void Popolazione::collision() {
   }
 }
 
-void Popolazione::infection(double b, double g) {
+void Popolazione::infection(Parameter const& par) {
   for (int i = 0; i < size() - 1; ++i) {
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
@@ -123,7 +120,7 @@ void Popolazione::infection(double b, double g) {
           std::uniform_int_distribution<> prob(0, 100);
           int p = prob(gen);
 
-          if ((b * 100) >= p) {
+          if ((par.b * 100) >= p) {
             st2 = Stato::i;
             v[j].SetStatus(st2);
             continue;
@@ -133,7 +130,7 @@ void Popolazione::infection(double b, double g) {
           std::mt19937 gen(time(0));
           std::uniform_int_distribution<> prob(0, 100);
           int p = prob(gen);
-          if ((b * 100) >= p) {
+          if ((par.b * 100) >= p) {
             st1 = Stato::i;
             v[i].SetStatus(st1);
           }
@@ -144,7 +141,7 @@ void Popolazione::infection(double b, double g) {
       std::mt19937 gen(time(0));
       std::uniform_int_distribution<> prob(0, 100);
       int p = prob(gen);
-      if ((g * 100) >= p) {
+      if ((par.g * 100) >= p) {
         v[i].SetStatus(Stato::r);
       }
     }
