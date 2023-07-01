@@ -5,16 +5,10 @@
 
 enum class Stato { s, i, r };
 
-class Parameter {
- private:
+struct Parameter {
+
   double b;
   double g;
-
- public:
-  Parameter(double B, double G) : b{B}, g{G} {};
-
-  double beta() const { return b; }
-  double gamma() const { return g; }
 };
 
 class Persona {
@@ -49,7 +43,7 @@ class Popolazione {
 
   int size() { return v.size(); }
 
-  void evolve();
+  void evolve(Parameter const& par);
 
   void random_distribution();
 
@@ -57,7 +51,7 @@ class Popolazione {
 
   void collision();
 
-  void infection(double b, double g);
+  void infection(Parameter const& par);
 };
 
 #endif
