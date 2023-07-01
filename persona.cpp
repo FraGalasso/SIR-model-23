@@ -2,7 +2,7 @@
 
 #include <random>
 
-void Popolazione::evolve(Parameter const& par) {
+void Popolazione::evolve() {
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::r) {
       continue;
@@ -50,7 +50,7 @@ void Popolazione::evolve(Parameter const& par) {
     v[i].SetX(r);
   }
 
-  infection(par);
+  infection();
   collision();
 }
 
@@ -103,12 +103,12 @@ void Popolazione::collision() {
   }
 }
 
-void Popolazione::infection(Parameter const& par) {
+void Popolazione::infection() {
   std::random_device r;
   std::default_random_engine eng(r());
   std::uniform_real_distribution<> prob(0, 1);
   for (int i = 0; i < size(); ++i) {
-    if (v[i].GetStatus() == Stato::i && prob(eng) < par.g) {
+    if (v[i].GetStatus() == Stato::i && prob(eng) < gamma) {
       v[i].SetStatus(Stato::r);
       v[i].SetX(100);
     }
@@ -121,7 +121,7 @@ void Popolazione::infection(Parameter const& par) {
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
         Stato st2 = v[j].GetStatus();
-        if ((st1 == st2) || (st2 == Stato::r) || (prob(eng) > par.b)) {
+        if ((st1 == st2) || (st2 == Stato::r) || (prob(eng) > beta)) {
           continue;
         }
         if (st1 == Stato::i) {

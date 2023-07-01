@@ -6,9 +6,8 @@ TEST_CASE("Testing only gamma") {
   double counter = 0;
   for (int i = 0; i < 100000; ++i) {
     Persona p(1, -1, 0, Stato::i);
-    Popolazione pop{{p}};
-    Parameter par{1, 0.25};
-    pop.evolve(par);
+    Popolazione pop{{p}, 1, 0.25};
+    pop.evolve();
 
     if (pop.GetPerson(0).GetStatus() == Stato::r) {
       ++counter;
@@ -23,10 +22,9 @@ TEST_CASE("Testing only beta") {
   for (int i = 0; i < 100000; ++i) {
     Persona p(1, -1, 0, Stato::s);
     Persona q(9, 1, 0, Stato::i);
-    Popolazione pop{{p, q}};
-    Parameter par{0.3, 0};
-    pop.evolve(par);
-    pop.evolve(par);
+    Popolazione pop{{p, q}, 0.3, 0};
+    pop.evolve();
+    pop.evolve();
 
     if (pop.GetPerson(0).GetStatus() == Stato::i) {
       ++counter;
@@ -43,10 +41,9 @@ TEST_CASE("Testing beta and gamma") {
   for (int i = 0; i < 100000; ++i) {
     Persona p(1, -1, 0, Stato::s);
     Persona q(9, 1, 0, Stato::i);
-    Popolazione pop{{p, q}};
-    Parameter par{0.5, 0.5};
-    pop.evolve(par);
-    pop.evolve(par);
+    Popolazione pop{{p, q}, 0.5, 0.5};
+    pop.evolve();
+    pop.evolve();
 
     if (pop.GetPerson(0).GetStatus() == Stato::s) {
       ++counter1p;

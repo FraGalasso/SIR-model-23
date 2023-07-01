@@ -1,15 +1,10 @@
 #ifndef PERSONA_HPP
 #define PERSONA_HPP
 
+#include <stdexcept>
 #include <vector>
 
 enum class Stato { s, i, r };
-
-struct Parameter {
-
-  double b;
-  double g;
-};
 
 class Persona {
  private:
@@ -35,15 +30,32 @@ class Persona {
 class Popolazione {
  private:
   std::vector<Persona> v;
+  const double beta;
+  const double gamma;
 
  public:
-  Popolazione(std::vector<Persona> V) : v{V} {};
+  Popolazione(std::vector<Persona> V, double b, double g)
+      : v{V}, beta{b}, gamma{g} {
+    if (b < 0 || b > 1) {
+      throw std::runtime_error{"Not a valid beta."};
+    }
+    if (g < 0 || g > 1) {
+      throw std::runtime_error{"Not a valid gamma."};
+    }
+  };
+
+  // useful for collision tests
+  Popolazione(std::vector<Persona> V) : v{V}, beta{0}, gamma{0} {};
 
   Persona GetPerson(int i) const { return v[i]; }
 
+  double GetBeta() const { return beta; }
+
+  double GetGamma() const { return gamma; }
+
   int size() { return v.size(); }
 
-  void evolve(Parameter const& par);
+  void evolve();
 
   void random_distribution();
 
@@ -51,7 +63,7 @@ class Popolazione {
 
   void collision();
 
-  void infection(Parameter const& par);
+  void infection();
 };
 
 #endif
