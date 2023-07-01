@@ -5,6 +5,18 @@
 
 enum class Stato { s, i, r };
 
+class Parameter {
+ private:
+  double b;
+  double g;
+
+ public:
+  Parameter(double B, double G) : b{B}, g{G} {};
+
+  double beta() const { return b; }
+  double gamma() const { return g; }
+};
+
 class Persona {
  private:
   int x;
@@ -18,12 +30,12 @@ class Persona {
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   Stato GetStatus() const { return s; }
-  bool GetCollision() const {return e; }
+  bool GetCollision() const { return e; }
   void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
   void SetStatus(Stato z) { s = z; }
-  void SetCollision(bool c) {e = c;}
+  void SetCollision(bool c) { e = c; }
 };
 
 class Popolazione {
@@ -45,7 +57,7 @@ class Popolazione {
 
   void collision();
 
-  void infection();
+  void infection(double b, double g);
 };
 
 #endif
