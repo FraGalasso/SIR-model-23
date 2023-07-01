@@ -24,7 +24,6 @@ TEST_CASE("Testing collisions") {
   CHECK(q1.GetPy() == 0);
 };
 
-// horrible fail
 TEST_CASE("Testing triple collisions") {
   Persona a(1, -1, 0, Stato::s);
   Persona b(9, 1, 0, Stato::s);

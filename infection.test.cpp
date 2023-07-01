@@ -2,19 +2,14 @@
 #include "doctest.h"
 #include "persona.hpp"
 
-TEST_CASE("Testing Evolution with three elements") {
+TEST_CASE("Testing simple infection") {
   Stato S{Stato::s};
   Stato I{Stato::i};
-  Stato R{Stato::r};
   Persona p(1, -1, 0, I);
   Persona q(9, 1, 0, S);
   Persona d(27, -1, 1, S);
-  std::vector<Persona> V;
-  V = {p, d, q};
-  Popolazione pop{V};
+  Popolazione pop{{p, d, q}};
   pop.evolve();
- // pop.collision();
- //pop.infection();
   pop.evolve();
  
   Persona p1 = pop.GetPerson(0);
