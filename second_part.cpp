@@ -1,16 +1,40 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
+#include <random>
 #include <thread>
 
 #include "persona.hpp"
 
+Popolazione RandomPopulationGenerator(int s, int i, int r, double beta,
+                                      double gamma) {
+  std::random_device rd;
+  std::default_random_engine eng(rd());
+  std::uniform_int_distribution<> position(0, 99);
+  std::uniform_int_distribution<> momentum(-1, 1);
+  std::vector<Persona> people;
+  for (int j = 0; j < s; ++j) {
+    Persona p(position(eng), momentum(eng), momentum(eng), Stato::s);
+    people.push_back(p);
+  }
+  for (int j = 0; j < i; ++j) {
+    Persona p(position(eng), momentum(eng), momentum(eng), Stato::i);
+    people.push_back(p);
+  }
+  for (int j = 0; j < r; ++j) {
+    Persona p(100, 0, 0, Stato::r);
+    people.push_back(p);
+  }
+  Popolazione pop(people, beta, gamma);
+  return pop;
+}
+
+Popolazione RandomPopulationGenerator(int s, int i, double beta, double gamma) {
+  return RandomPopulationGenerator(s, i, 0, beta, gamma);
+}
+
 int main() {
   sf::RenderWindow window(sf::VideoMode(1000, 1000), "SIR visualization");
-  Persona p(1, -1, 0, Stato::s);
-  Persona q(9, 1, 0, Stato::i);
-  Popolazione pop{{p, q}, 0.5, 0.5};
-
-  pop.evolve();
+  Popolazione pop = RandomPopulationGenerator(16, 4, 0.4, 0.1);
 
   while (window.isOpen()) {
     sf::Event event;
