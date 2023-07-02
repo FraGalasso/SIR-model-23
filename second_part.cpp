@@ -22,6 +22,9 @@ int main() {
     window.clear(sf::Color::Black);
 
     for (int i = 0; i < pop.size(); ++i) {
+      if (pop.GetPerson(i).GetStatus() == Stato::r) {
+        continue;
+      }
       window.draw(pop.GetPerson(i).GetDot());
     }
 
