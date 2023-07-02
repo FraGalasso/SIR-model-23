@@ -1,6 +1,7 @@
 #ifndef PERSONA_HPP
 #define PERSONA_HPP
 
+#include <SFML/Graphics.hpp>
 #include <stdexcept>
 #include <vector>
 
@@ -12,19 +13,36 @@ class Persona {
   int px, py;
   Stato s;
   bool e = true;
+  sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(50, 50));
 
  public:
-  Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {};
+  Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {
+    if (s == Stato::s) {
+      dot.setFillColor(sf::Color::Green);
+    } else if (s == Stato::i) {
+      dot.setFillColor(sf::Color::Red);
+    } else {
+      dot.setFillColor(sf::Color::Black);
+      x = 100;
+    }
+    UpdateDotPosition();
+  };
   int GetX() const { return x; }
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   Stato GetStatus() const { return s; }
   bool GetCollision() const { return e; }
+  sf::RectangleShape GetDot() const { return dot; }
   void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
   void SetStatus(Stato z) { s = z; }
   void SetCollision(bool c) { e = c; }
+  void UpdateDotPosition() {
+    int posx = 25 + 100 * (x % 9);
+    int posy = 25 + 100 * (x / 10);
+    dot.setPosition(sf::Vector2f(posx, posy));
+  }
 };
 
 class Popolazione {

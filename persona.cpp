@@ -48,6 +48,7 @@ void Popolazione::evolve() {
       }
     }
     v[i].SetX(r);
+    v[i].UpdateDotPosition();
   }
 
   infection();
@@ -110,6 +111,7 @@ void Popolazione::infection() {
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::i && prob(eng) < gamma) {
       v[i].SetStatus(Stato::r);
+      v[i].GetDot().setFillColor(sf::Color::Yellow);
       v[i].SetX(100);
     }
   }
@@ -126,10 +128,12 @@ void Popolazione::infection() {
         }
         if (st1 == Stato::i) {
           v[j].SetStatus(Stato::i);
+          v[j].GetDot().setFillColor(sf::Color::Red);
           continue;
         }
         if (st1 == Stato::s) {
           v[i].SetStatus(Stato::i);
+          v[j].GetDot().setFillColor(sf::Color::Red);
         }
       }
     }
