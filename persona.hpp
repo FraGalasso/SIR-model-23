@@ -53,6 +53,9 @@ class Persona {
     }
     dot.setPosition(sf::Vector2f(posx, posy));
   }
+  void SetDotColor(sf::Color color) {
+    dot.setFillColor(color);
+  }
 };
 
 class Popolazione {

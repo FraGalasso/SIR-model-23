@@ -66,9 +66,10 @@ int main() {
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed) window.close();
     }
-    pop.evolve();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     window.clear(sf::Color::Black);
+
+    pop.evolve();
 
     for (int i = 0; i < pop.size(); ++i) {
       if (pop.GetPerson(i).GetStatus() == Stato::r) {

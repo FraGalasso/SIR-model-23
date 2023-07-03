@@ -102,12 +102,12 @@ void Popolazione::infection() {
         }
         if (st1 == Stato::i) {
           v[j].SetStatus(Stato::i);
-          v[j].GetDot().setFillColor(sf::Color::Red);
+          v[j].SetDotColor(sf::Color::Red);
           continue;
         }
         if (st1 == Stato::s) {
           v[i].SetStatus(Stato::i);
-          v[j].GetDot().setFillColor(sf::Color::Red);
+          v[i].SetDotColor(sf::Color::Red);
         }
       }
     }
