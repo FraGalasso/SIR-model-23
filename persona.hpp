@@ -13,7 +13,7 @@ class Persona {
   int px, py;
   Stato s;
   bool e = true;
-  sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(50, 50));
+  sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(30, 30));
 
  public:
   Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {
@@ -39,8 +39,18 @@ class Persona {
   void SetStatus(Stato z) { s = z; }
   void SetCollision(bool c) { e = c; }
   void UpdateDotPosition() {
-    int posx = 25 + 100 * (x % 9);
-    int posy = 25 + 100 * (x / 10);
+    int posx = 30 + 90 * (x % 9);
+    int posy = 30 + 90 * (x / 10);
+    if (px == 1) {
+      posx -= 30;
+    } else if (px == -1) {
+      posx += 30;
+    }
+    if (py == 1) {
+      posy -= 30;
+    } else if (py == -1) {
+      posy += 30;
+    }
     dot.setPosition(sf::Vector2f(posx, posy));
   }
 };
@@ -75,17 +85,9 @@ class Popolazione {
 
   void evolve();
 
-  void random_distribution();
-
-  void status_distribution(int n);
-
-  void collision();
+  // void collision();
 
   void infection();
 };
 
 #endif
-
-// fare in modo che ci sia una probabilità di contagio
-
-// visualizzazione con una griglia 10x10

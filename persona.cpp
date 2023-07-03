@@ -3,14 +3,18 @@
 #include <random>
 
 void Popolazione::evolve() {
+  std::random_device rd;
+  std::default_random_engine engine(rd());
+  std::uniform_int_distribution<> jump(-1, 1);
+
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::r) {
       continue;
     }
 
     int r = v[i].GetX();
-    int px = v[i].GetPx();
-    int py = v[i].GetPy();
+    int px = jump(engine);
+    int py = jump(engine);
 
     if (px == 1) {
       if ((r % 10) == 9) {
@@ -52,37 +56,9 @@ void Popolazione::evolve() {
   }
 
   infection();
-  collision();
 }
 
-void Popolazione::random_distribution() {
-  std::mt19937 gen(time(0));
-  // random bit generator (mersenne twister)
-  for (int i = 0; i < size(); ++i) {
-    std::uniform_int_distribution<> x_distribution(0, 99);
-    int x = x_distribution(gen);
-    std::uniform_int_distribution<> px_distribution(-1, 1);
-    int px = px_distribution(gen);
-    std::uniform_int_distribution<> py_distribution(-1, 1);
-    int py = py_distribution(gen);
-    v[i].SetX(x);
-    v[i].SetPx(px);
-    v[i].SetPy(py);
-  }
-}
-
-void Popolazione::status_distribution(int n) {
-  std::mt19937 gen(time(0));
-  // random bit generator (mersenne twister)
-  for (int i = 0; i < n; ++i) {
-    v[i].SetStatus(Stato::i);
-  }
-  for (int i = n; i < size(); ++i) {
-    v[i].SetStatus(Stato::s);
-  }
-}
-
-void Popolazione::collision() {
+/*void Popolazione::collision() {
   for (int i = 0; i < size() - 1; ++i) {
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
@@ -102,7 +78,7 @@ void Popolazione::collision() {
   for (int i = 0; i < size(); ++i) {
     v[i].SetCollision(true);
   }
-}
+}*/
 
 void Popolazione::infection() {
   std::random_device r;
@@ -111,7 +87,6 @@ void Popolazione::infection() {
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::i && prob(eng) < gamma) {
       v[i].SetStatus(Stato::r);
-      v[i].GetDot().setFillColor(sf::Color::Yellow);
       v[i].SetX(100);
     }
   }
