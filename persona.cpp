@@ -17,41 +17,40 @@ void Popolazione::evolve() {
     int py = jump(engine);
 
     if (px == 1) {
-      if ((r % 10) == 9) {
-        // dx = -9;
-        r -= 9;
+      if (r % 40 == 39) {
+        r -= 39;
       } else {
-        // dx = 1;
         ++r;
       }
     }
     if (px == -1) {
-      if (r % 10 == 0) {
-        // dx = 9;
-        r += 9;
+      if (r % 40 == 0) {
+        r += 39;
       } else {
         --r;
       }
     }
     if (py == 1) {
-      if (r >= 0 && r <= 9) {
+      if (r >= 0 && r <= 39) {
         // dy = 90;
-        r += 90;
+        r += 1560;
       } else {
         // dy = -10;
-        r -= 10;
+        r -= 40;
       }
     }
     if (py == -1) {
       if (r >= 90 && r <= 99) {
         // dy = -90;
-        r -= 90;
+        r -= 1560;
       } else {
         // dy = 10;
-        r += 10;
+        r += 40;
       }
     }
     v[i].SetX(r);
+    v[i].SetPx(px);
+    v[i].SetPy(py);
     v[i].UpdateDotPosition();
   }
 

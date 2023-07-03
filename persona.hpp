@@ -12,8 +12,8 @@ class Persona {
   int x;
   int px, py;
   Stato s;
-  bool e = true;
-  sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(30, 30));
+  // bool e = true;
+  sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(6, 6));
 
  public:
   Persona(int X, int Px, int Py, Stato S) : x{X}, px{Px}, py{Py}, s{S} {
@@ -31,25 +31,25 @@ class Persona {
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   Stato GetStatus() const { return s; }
-  bool GetCollision() const { return e; }
+  // bool GetCollision() const { return e; }
   sf::RectangleShape GetDot() const { return dot; }
   void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
   void SetStatus(Stato z) { s = z; }
-  void SetCollision(bool c) { e = c; }
+  // void SetCollision(bool c) { e = c; }
   void UpdateDotPosition() {
-    int posx = 30 + 90 * (x % 9);
-    int posy = 30 + 90 * (x / 10);
+    int posx = 6 + 18 * (x % 40);
+    int posy = 6 + 18 * (x / 40);
     if (px == 1) {
-      posx -= 30;
+      posx -= 6;
     } else if (px == -1) {
-      posx += 30;
+      posx += 6;
     }
     if (py == 1) {
-      posy -= 30;
+      posy += 6;
     } else if (py == -1) {
-      posy += 30;
+      posy -= 6;
     }
     dot.setPosition(sf::Vector2f(posx, posy));
   }

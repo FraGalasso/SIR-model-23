@@ -7,36 +7,11 @@
 
 #include "parameters.hpp"
 #include "sir.hpp"
+#include "insert_functions.hpp"
 
 void print_SIR(SIR const& m) {
   std::cout << "Susceptibles: " << m.get_s() << "\nInfectious: " << m.get_i()
             << "\nRemoved: " << m.get_r() << '\n';
-}
-
-double insert_parameter() {
-  double par;
-  while (!(std::cin >> par) || par < 0 || par > 1) {
-    if (std::cin.eof()) {
-      throw std::runtime_error{"Unexpected input termination."};
-    }
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cerr << "Invalid input. Remember that it must be between 0 and 1.\n";
-  }
-  return par;
-}
-
-int insert_people() {
-  int people;
-  while (!(std::cin >> people) || people < 0) {
-    if (std::cin.eof()) {
-      throw std::runtime_error{"Unexpected input termination."};
-    }
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cerr << "Invalid input. Remember that it must be at least 0.\n";
-  }
-  return people;
 }
 
 int main() {
