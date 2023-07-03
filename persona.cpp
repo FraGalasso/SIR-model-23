@@ -86,7 +86,7 @@ void Popolazione::infection() {
   for (int i = 0; i < size(); ++i) {
     if (v[i].GetStatus() == Stato::i && prob(eng) < gamma) {
       v[i].SetStatus(Stato::r);
-      v[i].SetX(100);
+      v[i].SetX(1600);
     }
   }
   for (int i = 0; i < size(); ++i) {
