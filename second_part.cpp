@@ -7,7 +7,8 @@
 #include "insert_functions.hpp"
 #include "persona.hpp"
 
-Popolazione RandomPopulationGenerator(int s, int i, double beta, double gamma) {
+Popolazione RandomPopulationGenerator(int s, int i, double beta, double gamma,
+                                      double vax_pct) {
   std::random_device rd;
   std::default_random_engine eng(rd());
   std::uniform_int_distribution<> position(0, 1599);
@@ -21,7 +22,7 @@ Popolazione RandomPopulationGenerator(int s, int i, double beta, double gamma) {
     Persona p(position(eng), momentum(eng), momentum(eng), Stato::i);
     people.push_back(p);
   }
-  Popolazione pop(people, beta, gamma);
+  Popolazione pop(people, beta, gamma, vax_pct);
   return pop;
 }
 
@@ -34,11 +35,19 @@ int main() {
   int sus{insert_people()};
   std::cout << "Input infectious.\n";
   int inf{insert_people()};
-  std::cout << "Do you want to show the grid?.\n";
+  std::cout << "Do you want to show the grid? [y/n].\n";
   bool show_grid{insert_y_n()};
+  std::cout << "Do you want to have vaccinations? [y/n].\n";
+  bool vaccine{insert_y_n()};
+  double vax_pct = 1;
+  if (vaccine) {
+    std::cout << "Input what percentage of deaths triggers "
+                 "vaccinations.\n(Number from 0 to 1.)\n";
+    vax_pct = insert_parameter();
+  }
 
   sf::RenderWindow window(sf::VideoMode(720, 720), "SIR visualization");
-  Popolazione pop = RandomPopulationGenerator(sus, inf, beta, gamma);
+  Popolazione pop = RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
 
   std::vector<sf::VertexArray> grid_lines;
 
@@ -66,15 +75,12 @@ int main() {
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed) window.close();
     }
+
+    pop.evolve();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     window.clear(sf::Color::Black);
 
-    pop.evolve();
-
     for (int i = 0; i < pop.size(); ++i) {
-      if (pop.GetPerson(i).GetStatus() == Stato::r) {
-        continue;
-      }
       window.draw(pop.GetPerson(i).GetDot());
     }
     if (show_grid) {

@@ -71,7 +71,7 @@ void Popolazione::infection() {
       if (v[i].GetX() == v[j].GetX()) {
         Stato st2 = v[j].GetStatus();
         double p = prob(eng);
-        p = (v[i].GetVaccination() || v[j].GetVaccination()) ? 1.5 * p : p;
+        p = (v[i].GetVaccination() || v[j].GetVaccination()) ? 1.2 * p : p;
         if ((st1 == st2) || (p > beta)) {
           continue;
         }
@@ -97,7 +97,7 @@ void Popolazione::vaccination() {
   if ((original_size - actual_size) >= vaccination_campaign * original_size) {
     double count = 0;
     for (int i = 0; i < actual_size; ++i) {
-      if ((count < (0.05) * actual_size) && (v[i].GetVaccination() == false)) {
+      if ((count < (0.01) * actual_size) && (v[i].GetVaccination() == false)) {
         v[i].Vaccine();
         ++count;
       }

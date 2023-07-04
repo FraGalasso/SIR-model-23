@@ -36,7 +36,9 @@ class Persona {
   void SetStatus(Stato z) { s = z; }
   void Vaccine() {
     is_vaccinated = true;
-    dot.setFillColor(sf::Color::Blue);
+    if (s == Stato::s) {
+      dot.setFillColor(sf::Color::Blue);
+    }
   }
   void UpdateDotPosition() {
     int posx = 6 + 18 * (x % 40);
