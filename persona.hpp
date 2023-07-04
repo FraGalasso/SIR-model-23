@@ -61,9 +61,9 @@ class Popolazione {
   std::vector<Persona> v;
   const double beta;
   const double gamma;
-  const double vaccination_campaign;
   // percentage of deaths before vaccination starts
   // if there is no vaccination it is set to 1 (it never starts)
+  const double vaccination_campaign;
   const int original_size;
 
  public:

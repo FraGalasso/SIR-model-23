@@ -51,6 +51,7 @@ void Popolazione::evolve() {
   }
 
   infection();
+  vaccination();
 }
 
 void Popolazione::infection() {
@@ -89,13 +90,14 @@ void Popolazione::infection() {
 }
 
 void Popolazione::vaccination() {
-  double count{0};
   int actual_size = size();
 
-  if ((original_size - actual_size) >= vaccination_campaign * actual_size) {
+  // if number of removed people is lower than a certain threshold, vaccination
+  // campaign doesn't start
+  if ((original_size - actual_size) >= vaccination_campaign * original_size) {
+    double count = 0;
     for (int i = 0; i < actual_size; ++i) {
-      if ((count < (0.05) * actual_size) &&
-          (v[i].GetVaccination() == false)) {
+      if ((count < (0.05) * actual_size) && (v[i].GetVaccination() == false)) {
         v[i].Vaccine();
         ++count;
       }
