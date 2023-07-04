@@ -5,14 +5,14 @@
 #include <stdexcept>
 #include <vector>
 
-enum class Stato { s, i, r };
+enum class Stato { s, i };
 
 class Persona {
  private:
   int x;
   int px, py;
   Stato s;
-  // bool e = true;
+  bool is_vaccinated = false;
   sf::RectangleShape dot = sf::RectangleShape(sf::Vector2f(6, 6));
 
  public:
@@ -21,9 +21,6 @@ class Persona {
       dot.setFillColor(sf::Color::Green);
     } else if (s == Stato::i) {
       dot.setFillColor(sf::Color::Red);
-    } else {
-      dot.setFillColor(sf::Color::Black);
-      x = 100;
     }
     UpdateDotPosition();
   };
@@ -31,13 +28,16 @@ class Persona {
   int GetPx() const { return px; }
   int GetPy() const { return py; }
   Stato GetStatus() const { return s; }
-  // bool GetCollision() const { return e; }
+  bool GetVaccination() const { return is_vaccinated; }
   sf::RectangleShape GetDot() const { return dot; }
   void SetX(int y) { x = y; }
   void SetPx(int p) { px = p; }
   void SetPy(int p) { py = p; }
   void SetStatus(Stato z) { s = z; }
-  // void SetCollision(bool c) { e = c; }
+  void Vaccine() {
+    is_vaccinated = true;
+    dot.setFillColor(sf::Color::Blue);
+  }
   void UpdateDotPosition() {
     int posx = 6 + 18 * (x % 40);
     int posy = 6 + 18 * (x / 40);
@@ -53,9 +53,7 @@ class Persona {
     }
     dot.setPosition(sf::Vector2f(posx, posy));
   }
-  void SetDotColor(sf::Color color) {
-    dot.setFillColor(color);
-  }
+  void SetDotColor(sf::Color color) { dot.setFillColor(color); }
 };
 
 class Popolazione {
@@ -63,20 +61,33 @@ class Popolazione {
   std::vector<Persona> v;
   const double beta;
   const double gamma;
+  const double vaccination_campaign;
+  // percentage of deaths before vaccination starts
+  // if there is no vaccination it is set to 1 (it never starts)
+  const int original_size;
 
  public:
-  Popolazione(std::vector<Persona> V, double b, double g)
-      : v{V}, beta{b}, gamma{g} {
+  Popolazione(std::vector<Persona> V, double b, double g, double vax)
+      : v{V},
+        beta{b},
+        gamma{g},
+        vaccination_campaign{vax},
+        original_size{static_cast<int>(V.size())} {
     if (b < 0 || b > 1) {
       throw std::runtime_error{"Not a valid beta."};
     }
     if (g < 0 || g > 1) {
       throw std::runtime_error{"Not a valid gamma."};
     }
+    if (vax < 0 || vax > 1) {
+      throw std::runtime_error{
+          "Not a valid percentage for vaccination campaign."};
+    }
   };
 
-  // useful for collision tests
-  Popolazione(std::vector<Persona> V) : v{V}, beta{0}, gamma{0} {};
+  // useful with no vaccination
+  Popolazione(std::vector<Persona> V, double b, double g)
+      : Popolazione(V, b, g, 1.){};
 
   Persona GetPerson(int i) const { return v[i]; }
 
@@ -88,9 +99,14 @@ class Popolazione {
 
   void evolve();
 
-  // void collision();
-
   void infection();
+
+  void vaccination();
+
+  void death(int i) {
+    auto it = v.begin() + i;
+    v.erase(it);
+  }
 };
 
 #endif

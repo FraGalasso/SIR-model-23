@@ -31,21 +31,15 @@ target_link_libraries(visual sfml-graphics)
 #   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
 if (BUILD_TESTING)
 
-  # aggiungi l'eseguibile sir.t
   add_executable(sir.t sir.test.cpp sir.cpp)
-  # aggiungi l'eseguibile sir.t alla lista dei test
   add_test(NAME sir.t COMMAND sir.t)
 
   add_executable(evolve1.t evolve1.test.cpp sir.cpp)
   add_test(NAME evolve1.t COMMAND evolve1.t)
 
-  add_executable(evolve2.t evolve2.test.cpp sir.cpp persona.cpp)
-  target_link_libraries(evolve2.t sfml-graphics)
-  add_test(NAME evolve2.t COMMAND evolve2.t)
-
-  add_executable(collision.t collision.test.cpp persona.cpp)
-  target_link_libraries(collision.t sfml-graphics)
-  add_test(NAME collision.t COMMAND collision.t)
+  add_executable(vaccination.t vaccination.test.cpp persona.cpp)
+  target_link_libraries(vaccination.t sfml-graphics)
+  add_test(NAME vaccination.t COMMAND vaccination.t)
 
   add_executable(infection.t infection.test.cpp persona.cpp)
   target_link_libraries(infection.t sfml-graphics)

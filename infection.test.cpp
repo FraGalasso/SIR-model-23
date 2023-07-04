@@ -6,10 +6,10 @@ TEST_CASE("Testing only gamma") {
   double counter = 0;
   for (int i = 0; i < 100000; ++i) {
     Persona p(1, -1, 0, Stato::i);
-    Popolazione pop{{p}, 1, 0.25};
+    Popolazione pop{{p}, 1, 0.25, 1};
     pop.evolve();
 
-    if (pop.GetPerson(0).GetStatus() == Stato::r) {
+    if (pop.size() == 0) {
       ++counter;
     }
   }
@@ -22,7 +22,7 @@ TEST_CASE("Testing only beta") {
   for (int i = 0; i < 100000; ++i) {
     Persona p(1, 0, 0, Stato::s);
     Persona q(1, 0, 0, Stato::i);
-    Popolazione pop{{p, q}, 0.3, 0};
+    Popolazione pop{{p, q}, 0.3, 0, 1};
     pop.infection();
 
     if (pop.GetPerson(0).GetStatus() == Stato::i) {
@@ -32,30 +32,3 @@ TEST_CASE("Testing only beta") {
 
   CHECK((counter / 100000) == doctest::Approx(0.3).epsilon(0.005));
 };
-/*
-TEST_CASE("Testing beta and gamma") {
-  double counter1p = 0;
-  double counter2p = 0;
-  double counterq = 0;
-  for (int i = 0; i < 100000; ++i) {
-    Persona p(1, -1, 0, Stato::s);
-    Persona q(9, 1, 0, Stato::i);
-    Popolazione pop{{p, q}, 0.5, 0.5};
-    pop.evolve();
-    pop.evolve();
-
-    if (pop.GetPerson(0).GetStatus() == Stato::s) {
-      ++counter1p;
-    }
-    if (pop.GetPerson(0).GetStatus() == Stato::r) {
-      ++counter2p;
-    }
-    if (pop.GetPerson(1).GetStatus() == Stato::r) {
-      ++counterq;
-    }
-  }
-
-  CHECK((counter1p / 100000) == doctest::Approx(0.75).epsilon(0.005));
-  CHECK((counter2p / 100000) == doctest::Approx(0.125).epsilon(0.005));
-  CHECK((counterq / 100000) == doctest::Approx(0.75).epsilon(0.005));
-};*/
