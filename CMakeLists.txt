@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 # abilita warning
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+string(APPEND CMAKE_CXX_FLAGS " -O3")
 
 # abilita l'address sanitizer e l'undefined-behaviour sanitizer in debug mode
 string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")

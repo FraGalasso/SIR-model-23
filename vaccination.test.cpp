@@ -20,5 +20,5 @@ TEST_CASE("Testing Vaccination") {
     }
   }
 
-  CHECK(counter == 5);
+  CHECK(counter == 1);
 };

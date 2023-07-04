@@ -58,20 +58,24 @@ void Popolazione::infection() {
   std::random_device r;
   std::default_random_engine eng(r());
   std::uniform_real_distribution<> prob(0, 1);
+  std::vector<int> dead_people;
   for (int i = 0; i < size(); ++i) {
     double p = prob(eng);
-    p = v[i].GetVaccination() ? 2 * p : p;
+    p = v[i].GetVaccination() ? 1.2 * p : p;
     if (v[i].GetStatus() == Stato::i && p < gamma) {
-      death(i);
+      dead_people.push_back(i);
     }
   }
+  total_infectious -= static_cast<int>(dead_people.size());
+  death(dead_people);
   for (int i = 0; i < size(); ++i) {
     Stato st1 = v[i].GetStatus();
+    bool vax1 = v[i].GetVaccination();
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
         Stato st2 = v[j].GetStatus();
         double p = prob(eng);
-        p = (v[i].GetVaccination() || v[j].GetVaccination()) ? 1.2 * p : p;
+        p = (vax1 || v[j].GetVaccination()) ? 1.2 * p : p;
         if ((st1 == st2) || (p > beta)) {
           continue;
         }
@@ -82,6 +86,7 @@ void Popolazione::infection() {
           v[i].SetStatus(Stato::i);
           v[i].SetDotColor(sf::Color::Red);
         }
+        ++total_infectious;
         --total_susceptibles;
       }
     }
@@ -93,10 +98,10 @@ void Popolazione::vaccination() {
 
   // if number of removed people is lower than a certain threshold, vaccination
   // campaign doesn't start
-  if ((original_size - actual_size) >= vaccination_campaign * original_size) {
+  if ((1 - vaccination_campaign) * original_size >= actual_size) {
     double count = 0;
-    for (int i = 0; i < actual_size; ++i) {
-      if ((count < (0.01) * actual_size) && (v[i].GetVaccination() == false)) {
+    for (int i = 0; (i < actual_size) && (count < (0.01) * actual_size); ++i) {
+      if (!(v[i].GetVaccination())) {
         v[i].Vaccine();
         ++count;
       }
