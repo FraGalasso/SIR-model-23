@@ -67,6 +67,7 @@ class Popolazione {
   // if there is no vaccination it is set to 1 (it never starts)
   const double vaccination_campaign;
   const int original_size;
+  int total_susceptibles;
 
  public:
   Popolazione(std::vector<Persona> V, double b, double g, double vax)
@@ -85,6 +86,13 @@ class Popolazione {
       throw std::runtime_error{
           "Not a valid percentage for vaccination campaign."};
     }
+    int counter = 0;
+    for (int i = 0; i < static_cast<int>(v.size()); ++i) {
+      if (v[i].GetStatus() == Stato::s) {
+        ++counter;
+      }
+    }
+    total_susceptibles = counter;
   };
 
   // useful with no vaccination
@@ -96,6 +104,14 @@ class Popolazione {
   double GetBeta() const { return beta; }
 
   double GetGamma() const { return gamma; }
+
+  int GetSusceptibles() const { return total_susceptibles; }
+
+  int GetInfectious() const {
+    return static_cast<int>(v.size()) - total_susceptibles;
+  }
+
+  int GetRemoved() const { return original_size - static_cast<int>(v.size()); }
 
   int size() { return v.size(); }
 

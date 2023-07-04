@@ -78,12 +78,11 @@ void Popolazione::infection() {
         if (st1 == Stato::i) {
           v[j].SetStatus(Stato::i);
           v[j].SetDotColor(sf::Color::Red);
-          continue;
-        }
-        if (st1 == Stato::s) {
+        } else {
           v[i].SetStatus(Stato::i);
           v[i].SetDotColor(sf::Color::Red);
         }
+        --total_susceptibles;
       }
     }
   }

@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <string>
 #include <thread>
 
 #include "insert_functions.hpp"
@@ -46,7 +47,7 @@ int main() {
     vax_pct = insert_parameter();
   }
 
-  sf::RenderWindow window(sf::VideoMode(720, 720), "SIR visualization");
+  sf::RenderWindow window(sf::VideoMode(720, 775), "SIR visualization");
   Popolazione pop = RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
 
   std::vector<sf::VertexArray> grid_lines;
@@ -70,6 +71,38 @@ int main() {
     }
   }
 
+  sf::RectangleShape banner(sf::Vector2f(720, 55));
+  banner.setFillColor(sf::Color::White);
+  banner.setPosition(sf::Vector2f(0, 720));
+  sf::Font font;
+  if (!font.loadFromFile("helvetica.otf")) {
+    throw std::runtime_error{"Error loading fonts.\n"};
+  }
+  sf::Text title;
+  title.setFont(font);
+  title.setString("SIR model");
+  title.setCharacterSize(20);
+  title.setFillColor(sf::Color::Black);
+  title.setPosition(sf::Vector2f(340, 725));
+  sf::Text s_num;
+  s_num.setFont(font);
+  s_num.setCharacterSize(18);
+  s_num.setFillColor(sf::Color::Black);
+  s_num.setPosition(sf::Vector2f(50, 745));
+  std::string susceptibles{"Susceptibles: "};
+  sf::Text i_num;
+  i_num.setFont(font);
+  i_num.setCharacterSize(18);
+  i_num.setFillColor(sf::Color::Black);
+  i_num.setPosition(sf::Vector2f(325, 745));
+  std::string infectious{"Infectious: "};
+  sf::Text r_num;
+  r_num.setFont(font);
+  r_num.setCharacterSize(18);
+  r_num.setFillColor(sf::Color::Black);
+  r_num.setPosition(sf::Vector2f(585, 745));
+  std::string removed{"Removed: "};
+
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -77,18 +110,30 @@ int main() {
     }
 
     pop.evolve();
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
     window.clear(sf::Color::Black);
 
     for (int i = 0; i < pop.size(); ++i) {
       window.draw(pop.GetPerson(i).GetDot());
     }
+
     if (show_grid) {
       for (int i = 0; i < static_cast<int>(grid_lines.size()); ++i) {
         window.draw(grid_lines[i]);
       }
     }
+    window.draw(banner);
 
+    std::string sus_append = std::to_string(pop.GetSusceptibles());
+    std::string inf_append = std::to_string(pop.GetInfectious());
+    std::string rem_append = std::to_string(pop.GetRemoved());
+    s_num.setString(susceptibles + sus_append);
+    i_num.setString(infectious + inf_append);
+    r_num.setString(removed + rem_append);
+    window.draw(title);
+    window.draw(s_num);
+    window.draw(i_num);
+    window.draw(r_num);
     window.display();
   }
 }
