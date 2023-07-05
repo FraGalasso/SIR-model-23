@@ -35,10 +35,14 @@ int main() {
     double beta{insert_parameter()};
     std::cout << "Input gamma.\n";
     double gamma{insert_parameter()};
-    std::cout << "Input susceptibles.\n";
-    int sus{insert_people()};
-    std::cout << "Input infectious.\n";
-    int inf{insert_people()};
+    int sus = 1601;
+    int inf = 1601;
+    while (sus + inf > 1600) {
+      std::cout << "Input susceptibles (don't exceed 1600 total people).\n";
+      sus = insert_people();
+      std::cout << "Input infectious (don't exceed 1600 total people).\n";
+      inf = insert_people();
+    }
     std::cout << "Do you want to show the grid? [y/n].\n";
     bool show_grid{insert_y_n()};
     std::cout << "Do you want to have vaccinations? [y/n].\n";
@@ -54,7 +58,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(720, 775), "SIR visualization");
 
     // generating population
-    Population pop = RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
+    Population pop =
+        RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
 
     // used to store grid lines (if necessary)
     std::vector<sf::VertexArray> grid_lines;
@@ -161,7 +166,7 @@ int main() {
       i_num.setString(infectious + inf_append);
       r_num.setString(removed + rem_append);
 
-      //drawing texts
+      // drawing texts
       window.draw(title);
       window.draw(s_num);
       window.draw(i_num);
