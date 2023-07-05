@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 SIR::SIR(int s, int i, int r) : S{s}, I{i}, R{r} {
+  // throwing if we have negative people
   if ((s < 0) || (i < 0) || (r < 0)) {
     throw std::runtime_error("S, I, R are negative.");
   }

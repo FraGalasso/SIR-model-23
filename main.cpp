@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "insert_functions.hpp"
 #include "parameters.hpp"
 #include "sir.hpp"
-#include "insert_functions.hpp"
 
 void print_SIR(SIR const& m) {
   std::cout << "Susceptibles: " << m.get_s() << "\nInfectious: " << m.get_i()
@@ -30,9 +30,14 @@ int main() {
     model.set_r(insert_people());
     std::cout << "Input duration (in days).\n";
     int steps{insert_people()};
+
+    // used to check wheter there are any changes with time
     SIR previous{};
 
+    // total number of people
     const int N{model.get_s() + model.get_i() + model.get_r()};
+
+    // avoid calculation if there is no people
     if (N == 0) {
       steps = 0;
     }
@@ -91,6 +96,7 @@ int main() {
     }
     print_SIR(model);
 
+    // writing final results in a .txt fille
     std::ofstream out_file("results.txt");
     if (!out_file) {
       std::cerr << "Failed opening results.txt.\n";

@@ -8,12 +8,14 @@ class SIR {
   int R;
 
  public:
-  explicit SIR(int s = 0, int i = 0, int r = 0);
+  SIR(int s = 0, int i = 0, int r = 0);
 
+  // getters
   int get_s() const;
   int get_i() const;
   int get_r() const;
 
+  // setters
   void set_s(int s);
   void set_i(int i);
   void set_r(int r);

@@ -15,7 +15,11 @@ TEST_CASE("Testing getters and setters") {
   CHECK(m.get_i() == 5);
   CHECK(m.get_r() == 0);
   m.set_s(51);
+  m.set_i(42);
+  m.set_r(99);
   CHECK(m.get_s() == 51);
+  CHECK(m.get_i() == 42);
+  CHECK(m.get_r() == 99);
 }
 
 TEST_CASE("Testing == operator") {

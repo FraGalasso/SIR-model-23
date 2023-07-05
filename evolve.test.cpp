@@ -10,7 +10,7 @@ int evolve(Parameters const& p, SIR& model, int const& steps) {
 
   const int N{model.get_s() + model.get_i() + model.get_r()};
 
-  if (N==0) {
+  if (N == 0) {
     return 1;
   }
 
@@ -67,6 +67,8 @@ int evolve(Parameters const& p, SIR& model, int const& steps) {
   }
   return steps;
 }
+
+// results of these test have been independently checked by authors
 
 TEST_CASE("Testing no evolution") {
   SIR m(60, 5, 0);
