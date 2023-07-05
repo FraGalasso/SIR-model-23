@@ -1,7 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "doctest.h"
-#include "parameters.hpp"
 #include "sir.hpp"
 
 // returns steps needed to get to result

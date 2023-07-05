@@ -6,24 +6,26 @@
 #include <thread>
 
 #include "insert_functions.hpp"
-#include "persona.hpp"
+#include "person.hpp"
+#include "population.hpp"
 
-Popolazione RandomPopulationGenerator(int s, int i, double beta, double gamma,
-                                      double vax_pct) {
+// generating random people and putting them in a population
+Population RandomPopulationGenerator(int s, int i, double beta, double gamma,
+                                     double vax_pct) {
   std::random_device rd;
   std::default_random_engine eng(rd());
   std::uniform_int_distribution<> position(0, 1599);
   std::uniform_int_distribution<> momentum(-1, 1);
-  std::vector<Persona> people;
+  std::vector<Person> people;
   for (int j = 0; j < s; ++j) {
-    Persona p(position(eng), momentum(eng), momentum(eng), Stato::s);
+    Person p(position(eng), momentum(eng), momentum(eng), Status::s);
     people.push_back(p);
   }
   for (int j = 0; j < i; ++j) {
-    Persona p(position(eng), momentum(eng), momentum(eng), Stato::i);
+    Person p(position(eng), momentum(eng), momentum(eng), Status::i);
     people.push_back(p);
   }
-  Popolazione pop(people, beta, gamma, vax_pct);
+  Population pop(people, beta, gamma, vax_pct);
   return pop;
 }
 
@@ -48,12 +50,17 @@ int main() {
       vax_pct = insert_parameter();
     }
 
+    // intializing sfml render window
     sf::RenderWindow window(sf::VideoMode(720, 775), "SIR visualization");
-    Popolazione pop = RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
 
+    // generating population
+    Population pop = RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
+
+    // used to store grid lines (if necessary)
     std::vector<sf::VertexArray> grid_lines;
 
     if (show_grid) {
+      // initializing grid lines
       for (int i = 1; i < 40; ++i) {
         sf::VertexArray line(sf::Lines, 2);
         line[0].position = sf::Vector2f(i * 18, 0);
@@ -72,13 +79,18 @@ int main() {
       }
     }
 
+    // lower banner to show real time statistics
     sf::RectangleShape banner(sf::Vector2f(720, 55));
     banner.setFillColor(sf::Color::White);
     banner.setPosition(sf::Vector2f(0, 720));
+
+    // loading 'Helvetica' font
     sf::Font font;
     if (!font.loadFromFile("helvetica.otf")) {
       throw std::runtime_error{"Error loading fonts.\n"};
     }
+
+    // Title and fixed elements to write in lower banner
     sf::Text title;
     title.setFont(font);
     title.setString("SIR model");
@@ -105,6 +117,7 @@ int main() {
     std::string removed{"Removed: "};
 
     while (window.isOpen()) {
+      // checking if the window is still open
       sf::Event event;
       while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
@@ -112,35 +125,52 @@ int main() {
         }
       }
 
+      // evolving once per iteration
       pop.evolve();
+
+      // early exit in case of empty population
       if (pop.size() == 0) {
         window.close();
         break;
       }
+
+      // clearing window from previous pictures
       window.clear(sf::Color::Black);
 
+      // drawing people
       for (int i = 0; i < pop.size(); ++i) {
-        window.draw(pop.GetPerson(i).GetDot());
+        window.draw(pop.get_person(i).get_dot());
       }
 
       if (show_grid) {
+        // drawing grid
         for (int i = 0; i < static_cast<int>(grid_lines.size()); ++i) {
           window.draw(grid_lines[i]);
         }
       }
+
+      // drawing lower banner
       window.draw(banner);
 
-      std::string sus_append = std::to_string(pop.GetSusceptibles());
-      std::string inf_append = std::to_string(pop.GetInfectious());
-      std::string rem_append = std::to_string(pop.GetRemoved());
+      // generating strings with current statistics
+
+      std::string sus_append = std::to_string(pop.get_susceptibles());
+      std::string inf_append = std::to_string(pop.get_infectious());
+      std::string rem_append = std::to_string(pop.get_removed());
       s_num.setString(susceptibles + sus_append);
       i_num.setString(infectious + inf_append);
       r_num.setString(removed + rem_append);
+
+      //drawing texts
       window.draw(title);
       window.draw(s_num);
       window.draw(i_num);
       window.draw(r_num);
+
+      // displaying the window
       window.display();
+
+      // waiting a bit to avoid messy evolution
       std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
   } catch (std::exception const& e) {

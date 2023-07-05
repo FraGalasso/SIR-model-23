@@ -13,7 +13,6 @@ set(CMAKE_CXX_EXTENSIONS ON)
 
 # abilita warning
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
-string(APPEND CMAKE_CXX_FLAGS " -O3")
 
 # abilita l'address sanitizer e l'undefined-behaviour sanitizer in debug mode
 string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
@@ -24,7 +23,7 @@ add_executable(sir main.cpp sir.cpp)
 
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
-add_executable(visual second_part.cpp persona.cpp)
+add_executable(visual second_part.cpp person.cpp population.cpp)
 
 target_link_libraries(visual sfml-graphics)
 
@@ -38,11 +37,11 @@ if (BUILD_TESTING)
   add_executable(evolve.t evolve.test.cpp sir.cpp)
   add_test(NAME evolve.t COMMAND evolve.t)
 
-  add_executable(vaccination.t vaccination.test.cpp persona.cpp)
+  add_executable(vaccination.t vaccination.test.cpp person.cpp population.cpp)
   target_link_libraries(vaccination.t sfml-graphics)
   add_test(NAME vaccination.t COMMAND vaccination.t)
 
-  add_executable(infection.t infection.test.cpp persona.cpp)
+  add_executable(infection.t infection.test.cpp person.cpp population.cpp)
   target_link_libraries(infection.t sfml-graphics)
   add_test(NAME infection.t COMMAND infection.t)
 

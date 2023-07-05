@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "insert_functions.hpp"
-#include "parameters.hpp"
 #include "sir.hpp"
 
 void print_SIR(SIR const& m) {
