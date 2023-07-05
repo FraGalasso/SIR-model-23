@@ -25,8 +25,14 @@ int main() {
     model.set_s(insert_people());
     std::cout << "Input infectious.\n";
     model.set_i(insert_people());
+    if (INT32_MAX - model.get_s() < model.get_i()) {
+      throw std::runtime_error{"Inserted people exceeded INT32_MAX"};
+    }
     std::cout << "Input removed.\n";
     model.set_r(insert_people());
+    if (INT32_MAX - model.get_s() - model.get_i() < model.get_r()) {
+      throw std::runtime_error{"Inserted people exceeded INT32_MAX"};
+    }
     std::cout << "Input duration (in days).\n";
     int steps{insert_people()};
 
