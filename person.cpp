@@ -1,4 +1,4 @@
-#include "persona.hpp"
+#include "person.hpp"
 
 Person::Person(int X, int Px, int Py, Status S) : x{X}, px{Px}, py{Py}, s{S} {
   if (s == Status::s) {
@@ -16,6 +16,8 @@ int Person::get_px() const { return px; }
 int Person::get_py() const { return py; }
 
 Status Person::get_status() const { return s; }
+
+sf::RectangleShape Person::get_dot() const { return dot; };
 
 bool Person::get_vaccination() const { return is_vaccinated; }
 
