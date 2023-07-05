@@ -67,7 +67,6 @@ class Popolazione {
   // if there is no vaccination it is set to 1 (it never starts)
   const double vaccination_campaign;
   const int original_size;
-  int total_infectious;
   int total_susceptibles;
 
  public:
@@ -88,13 +87,12 @@ class Popolazione {
           "Not a valid percentage for vaccination campaign."};
     }
     int counter = 0;
-    for (int j = 0; j < static_cast<int>(v.size()); ++j) {
-      if (v[j].GetStatus() == Stato::i) {
+    for (int j = 0; j < static_cast<int>(V.size()); ++j) {
+      if (v[j].GetStatus() == Stato::s) {
         ++counter;
       }
     }
-    total_infectious = counter;
-    total_susceptibles = static_cast<int>(V.size()) - total_infectious;
+    total_susceptibles = counter;
   };
 
   // useful with no vaccination
@@ -109,7 +107,7 @@ class Popolazione {
 
   int GetSusceptibles() const { return total_susceptibles; }
 
-  int GetInfectious() const { return total_infectious; }
+  int GetInfectious() const { return static_cast<int>(v.size()) -total_susceptibles; }
 
   int GetRemoved() const { return original_size - static_cast<int>(v.size()); }
 

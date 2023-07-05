@@ -28,19 +28,15 @@ void Popolazione::evolve() {
     }
     if (py == 1) {
       if (r >= 0 && r <= 39) {
-        // dy = 90;
         r += 1560;
       } else {
-        // dy = -10;
         r -= 40;
       }
     }
     if (py == -1) {
-      if (r >= 90 && r <= 99) {
-        // dy = -90;
+      if (r >= 1560 && r <= 1599) {
         r -= 1560;
       } else {
-        // dy = 10;
         r += 40;
       }
     }
@@ -61,33 +57,35 @@ void Popolazione::infection() {
   std::vector<int> dead_people;
   for (int i = 0; i < size(); ++i) {
     double p = prob(eng);
-    p = v[i].GetVaccination() ? 1.2 * p : p;
+    if (v[i].GetVaccination()) {
+      p *= 1.3;
+    }
     if (v[i].GetStatus() == Stato::i && p < gamma) {
       dead_people.push_back(i);
     }
   }
-  total_infectious -= static_cast<int>(dead_people.size());
   death(dead_people);
+
   for (int i = 0; i < size(); ++i) {
-    Stato st1 = v[i].GetStatus();
     bool vax1 = v[i].GetVaccination();
     for (int j = i + 1; j < size(); ++j) {
       if (v[i].GetX() == v[j].GetX()) {
-        Stato st2 = v[j].GetStatus();
         double p = prob(eng);
-        p = (vax1 || v[j].GetVaccination()) ? 1.2 * p : p;
-        if ((st1 == st2) || (p > beta)) {
-          continue;
+        if (vax1 || v[j].GetVaccination()) {
+          p *= 1.3;
         }
-        if (st1 == Stato::i) {
-          v[j].SetStatus(Stato::i);
-          v[j].SetDotColor(sf::Color::Red);
-        } else {
-          v[i].SetStatus(Stato::i);
-          v[i].SetDotColor(sf::Color::Red);
+        if (p < beta) {
+          if (v[i].GetStatus() == Stato::i && v[j].GetStatus() == Stato::s) {
+            v[j].SetStatus(Stato::i);
+            v[j].SetDotColor(sf::Color::Red);
+            --total_susceptibles;
+          }
+          if (v[i].GetStatus() == Stato::s && v[j].GetStatus() == Stato::i) {
+            v[i].SetStatus(Stato::i);
+            v[i].SetDotColor(sf::Color::Red);
+            --total_susceptibles;
+          }
         }
-        ++total_infectious;
-        --total_susceptibles;
       }
     }
   }
