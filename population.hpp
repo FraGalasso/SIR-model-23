@@ -2,80 +2,75 @@
 #define POPULATION_HPP
 
 #include <SFML/Graphics.hpp>
-#include <stdexcept>
 #include <vector>
 
-#include "persona.hpp"
+#include "person.hpp"
 
-class Popolazione {
+class Population {
  private:
-  std::vector<Persona> v;
+  // vector containing all the people
+  std::vector<Person> people;
+
+  // probability of infection
   const double beta;
+
+  // probability of death, if infectious
   const double gamma;
+
   // percentage of deaths before vaccination starts
   // if there is no vaccination it is set to 1 (it never starts)
   const double vaccination_campaign;
+
+  // starting number of people
   const int original_size;
+
+  // (updating) susceptibles counter
   int total_susceptibles;
 
  public:
-  Popolazione(std::vector<Persona> V, double b, double g, double vax)
-      : v{V},
-        beta{b},
-        gamma{g},
-        vaccination_campaign{vax},
-        original_size{static_cast<int>(V.size())} {
-    if (b < 0 || b > 1) {
-      throw std::runtime_error{"Not a valid beta."};
-    }
-    if (g < 0 || g > 1) {
-      throw std::runtime_error{"Not a valid gamma."};
-    }
-    if (vax < 0 || vax > 1) {
-      throw std::runtime_error{
-          "Not a valid percentage for vaccination campaign."};
-    }
-    int counter = 0;
-    for (int j = 0; j < static_cast<int>(V.size()); ++j) {
-      if (v[j].GetStatus() == Stato::s) {
-        ++counter;
-      }
-    }
-    total_susceptibles = counter;
-  };
+  // constructor, defined at line 6 of population.cpp
+  Population(std::vector<Person> V, double b, double g, double vax);
 
-  // useful with no vaccination
-  Popolazione(std::vector<Persona> V, double b, double g)
-      : Popolazione(V, b, g, 1.){};
+  // constructor with no vaccination, useful for tests, defined at line 34 of
+  // population.cpp
+  Population(std::vector<Person> V, double b, double g);
 
-  Persona GetPerson(int i) const { return v[i]; }
+  // getting i-th person, defined at line 37 of population.cpp
+  Person get_person(int i) const;
 
-  double GetBeta() const { return beta; }
+  // getting beta, defined at line 39 of population.cpp
+  double get_beta() const;
 
-  double GetGamma() const { return gamma; }
+  // getting gamma, defined at line 41 of population.cpp
+  double get_gamma() const;
 
-  int GetSusceptibles() const { return total_susceptibles; }
+  // getting current number of susceptibles, defined at line 43 of
+  // population.cpp
+  int get_susceptibles() const;
 
-  int GetInfectious() const {
-    return static_cast<int>(v.size()) - total_susceptibles;
-  }
+  // getting current number of infectious, defined at line 45 of population.cpp
+  int get_infectious() const;
 
-  int GetRemoved() const { return original_size - static_cast<int>(v.size()); }
+  // getting current number of removed, defined at line 49 of population.cpp
+  int get_removed() const;
 
-  int size() { return v.size(); }
+  // getting current number of alive people, defined at line 53 of
+  // population.cpp
+  int size();
 
+  // moving randomly people in the grid (one step), processing infections and
+  // vaccinations once , defined at line 55 of population.cpp
   void evolve();
 
+  // computing just infections, defined at line 109 of population.cpp
   void infection();
 
+  // computing just vaccinations, defined at line 175 of population.cpp
   void vaccination();
 
-  void death(std::vector<int> d) {
-    for (int i = static_cast<int>(d.size()) - 1; i >= 0; --i) {
-      auto it = v.begin() + d[i];
-      v.erase(it);
-    }
-  }
+  // removing people, based on a vector of indexes, defined at line 193 of
+  // population.cpp
+  void death(std::vector<int> d);
 };
 
 #endif
