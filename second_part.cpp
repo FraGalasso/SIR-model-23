@@ -10,8 +10,8 @@
 #include "population.hpp"
 
 // generating random people and putting them in a population
-Population RandomPopulationGenerator(int s, int i, double beta, double gamma,
-                                     double vax_pct) {
+Population random_population_generator(int s, int i, double beta, double gamma,
+                                       double vax_pct) {
   std::random_device rd;
   std::default_random_engine eng(rd());
   std::uniform_int_distribution<> position(0, 1599);
@@ -59,7 +59,7 @@ int main() {
 
     // generating population
     Population pop =
-        RandomPopulationGenerator(sus, inf, beta, gamma, vax_pct);
+        random_population_generator(sus, inf, beta, gamma, vax_pct);
 
     // used to store grid lines (if necessary)
     std::vector<sf::VertexArray> grid_lines;
