@@ -18,13 +18,13 @@ string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " -fsanitize=address,undefined")
 add_executable(sir first_part.cpp sir.cpp)
 
 # finding sfml packages
-find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics window REQUIRED)
 
 # executable for second part
 add_executable(visual second_part.cpp person.cpp population.cpp)
 
 # linking
-target_link_libraries(visual sfml-graphics)
+target_link_libraries(visual sfml-graphics sfml-window)
 
 # testing
 if (BUILD_TESTING)
