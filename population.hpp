@@ -65,10 +65,10 @@ class Population {
   // computing just infections, defined at line 109 of population.cpp
   void infection();
 
-  // computing just vaccinations, defined at line 175 of population.cpp
+  // computing just vaccinations, defined at line 170 of population.cpp
   void vaccination();
 
-  // removing people, based on a vector of indexes, defined at line 193 of
+  // removing people, based on a vector of indexes, defined at line 188 of
   // population.cpp
   void death(std::vector<int> d);
 };

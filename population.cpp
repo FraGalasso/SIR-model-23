@@ -121,11 +121,6 @@ void Population::infection() {
 
     double p = prob(eng);
 
-    // vaccinated people have more chances to avoid death if infectious
-    if (people[i].get_vaccination()) {
-      p *= 1.3;
-    }
-
     // filling dead_people with indexes
     if (p < gamma) {
       dead_people.push_back(i);
